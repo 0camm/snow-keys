@@ -2,79 +2,77 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-sans); }
-.wrap { padding: 1rem 0; }
-.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
-.label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
-.val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 12px; margin-bottom: 1rem; }
-.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; }
-input[type=password], input[type=text] { width: 100%; margin-bottom: 10px; }
-.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
-.tag-ok { background: var(--color-background-success); color: var(--color-text-success); }
-.tag-warn { background: var(--color-background-warning); color: var(--color-text-warning); }
-.tag-err { background: var(--color-background-danger); color: var(--color-text-danger); }
-.msg { font-size: 13px; padding: 10px 12px; border-radius: var(--border-radius-md); margin-top: 10px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); min-height: 38px; }
-.msg.ok { border-color: var(--color-border-success); color: var(--color-text-success); background: var(--color-background-success); }
-.msg.err { border-color: var(--color-border-danger); color: var(--color-text-danger); background: var(--color-background-danger); }
-.keys-list { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px; max-height: 220px; overflow-y: auto; margin-top: 10px; border: 0.5px solid var(--color-border-tertiary); white-space: pre; line-height: 1.7; }
+.wrap { padding: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; }
+.card-danger { border-color: var(--color-border-danger); }
+.section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 1rem; }
+.field-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
+.field-hint { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 10px; line-height: 1.5; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 999px; }
+.badge-ok { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-err { background: var(--color-background-danger); color: var(--color-text-danger); }
+.badge-warn { background: var(--color-background-warning); color: var(--color-text-warning); }
+.feedback { font-size: 13px; padding: 10px 14px; border-radius: var(--border-radius-md); margin-top: 12px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); line-height: 1.5; }
+.feedback.ok { border-color: var(--color-border-success); color: var(--color-text-success); background: var(--color-background-success); }
+.feedback.err { border-color: var(--color-border-danger); color: var(--color-text-danger); background: var(--color-background-danger); }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem 1.25rem; }
+.metric-val { font-size: 26px; font-weight: 500; color: var(--color-text-primary); line-height: 1.1; }
+.metric-label { font-size: 12px; color: var(--color-text-tertiary); margin-top: 4px; }
 .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1rem 0; }
-h2 { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
-.sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem; }
-.danger-zone { border-color: var(--color-border-danger); }
-.danger-note { font-size: 12px; color: var(--color-text-danger); margin-bottom: 10px; }
+.keys-box { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; max-height: 200px; overflow-y: auto; margin-top: 12px; border: 0.5px solid var(--color-border-tertiary); white-space: pre; line-height: 1.8; color: var(--color-text-secondary); }
+.danger-note { font-size: 12px; color: var(--color-text-danger); margin-bottom: 12px; line-height: 1.5; }
 </style>
 
 <div class="wrap">
-
   <div class="card">
-    <h2>Admin login</h2>
-    <p class="sub">Enter your <code>OWNER_PASS</code> env variable value — the same one set in your Cloudflare worker.</p>
-    <input type="password" id="pass" placeholder="Your OWNER_PASS value..." />
+    <p class="section-label">Authentication</p>
+    <p class="field-label">Owner password</p>
+    <p class="field-hint">Enter the <code>OWNER_PASS</code> value from your Cloudflare worker environment.</p>
+    <input type="password" id="pass" placeholder="••••••••••••" style="margin-bottom: 12px;" />
     <div class="row">
       <button onclick="checkStatus()">Check status</button>
       <span id="loginTag"></span>
     </div>
-    <div class="msg" id="loginMsg">Enter your password and click "Check status" to begin.</div>
+    <div class="feedback" id="loginMsg">Enter your password and click "Check status" to begin.</div>
   </div>
 
-  <div class="grid">
+  <div class="metrics">
     <div class="metric">
-      <div class="label">Keys remaining in pool</div>
-      <div class="val" id="statRemaining">—</div>
+      <div class="metric-val" id="statRemaining">—</div>
+      <div class="metric-label">Keys remaining</div>
     </div>
     <div class="metric">
-      <div class="label">Total pool size</div>
-      <div class="val">1,000</div>
+      <div class="metric-val">1,000</div>
+      <div class="metric-label">Pool size</div>
     </div>
     <div class="metric">
-      <div class="label">Keys used</div>
-      <div class="val" id="statUsed">—</div>
+      <div class="metric-val" id="statUsed">—</div>
+      <div class="metric-label">Keys used</div>
     </div>
   </div>
 
   <div class="card">
-    <h2>View available keys</h2>
-    <p class="sub">Dumps all keys still in the pool — share these with people who paid.</p>
+    <p class="section-label">Key pool</p>
+    <p class="field-hint">Dumps all unredeemed keys — copy and distribute to people who paid.</p>
     <div class="row">
       <button onclick="dumpKeys()">Load keys</button>
-      <button onclick="copyKeys()">Copy all keys</button>
+      <button onclick="copyKeys()">Copy all</button>
     </div>
-    <div class="msg" id="dumpMsg">Click "Load keys" to see available keys.</div>
-    <div class="keys-list" id="keysList" style="display:none"></div>
+    <div class="feedback" id="dumpMsg">Click "Load keys" to view available keys.</div>
+    <div class="keys-box" id="keysList" style="display:none"></div>
   </div>
 
-  <div class="card danger-zone">
-    <h2>Reseed key pool</h2>
-    <p class="sub">Wipes all remaining old keys and generates 1,000 fresh ones. Do this each week when you reset access.</p>
-    <p class="danger-note">Warning — this cannot be undone. Old unredeemed keys will stop working immediately.</p>
+  <div class="card card-danger">
+    <p class="section-label">Danger zone</p>
+    <p class="danger-note">Wipes all remaining keys and generates 1,000 fresh ones. Old unredeemed keys stop working immediately. This cannot be undone.</p>
     <div class="row">
-      <button onclick="confirmReseed()" id="reseedBtn">Reseed pool now</button>
+      <button onclick="confirmReseed()" id="reseedBtn">Reseed pool</button>
       <span id="reseedTag"></span>
     </div>
-    <div class="msg" id="reseedMsg">Ready — make sure you have your password entered above first.</div>
+    <div class="feedback" id="reseedMsg">Ready — make sure your password is entered above first.</div>
   </div>
-
 </div>
 
 <script>
@@ -86,14 +84,14 @@ function getPass() { return document.getElementById("pass").value.trim(); }
 function setMsg(id, text, type) {
   const el = document.getElementById(id);
   el.textContent = text;
-  el.className = "msg" + (type ? " " + type : "");
+  el.className = "feedback" + (type ? " " + type : "");
 }
 
 function setTag(id, text, type) {
   const el = document.getElementById(id);
   if (!el) return;
   el.textContent = text;
-  el.className = "tag tag-" + type;
+  el.className = "badge badge-" + type;
 }
 
 function updateStats(remaining) {
@@ -103,7 +101,7 @@ function updateStats(remaining) {
 
 async function adminPost(action) {
   const pass = getPass();
-  if (!pass) { return { ok: false, error: "Enter your OWNER_PASS first." }; }
+  if (!pass) return { ok: false, error: "Enter your password first." };
   const res = await fetch(API, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -152,7 +150,7 @@ function copyKeys() {
   navigator.clipboard.writeText(_keys.join("\n")).then(() => {
     setMsg("dumpMsg", "Copied " + _keys.length + " keys to clipboard.", "ok");
   }).catch(() => {
-    setMsg("dumpMsg", "Could not copy — try selecting the list manually.", "err");
+    setMsg("dumpMsg", "Copy failed — select the list manually.", "err");
   });
 }
 
@@ -161,16 +159,16 @@ function confirmReseed() {
   if (!_reseedConfirmed) {
     _reseedConfirmed = true;
     document.getElementById("reseedBtn").textContent = "Click again to confirm";
-    setMsg("reseedMsg", "Are you sure? Click again to permanently wipe and regenerate all keys.", "");
+    setMsg("reseedMsg", "Are you sure? This will permanently wipe all existing keys.", "");
     setTimeout(() => {
       _reseedConfirmed = false;
-      document.getElementById("reseedBtn").textContent = "Reseed pool now";
-      setMsg("reseedMsg", "Cancelled — took too long.", "");
+      document.getElementById("reseedBtn").textContent = "Reseed pool";
+      setMsg("reseedMsg", "Cancelled.", "");
     }, 5000);
     return;
   }
   _reseedConfirmed = false;
-  document.getElementById("reseedBtn").textContent = "Reseed pool now";
+  document.getElementById("reseedBtn").textContent = "Reseed pool";
   doReseed();
 }
 
@@ -181,7 +179,7 @@ async function doReseed() {
     const data = await adminPost("reseed");
     if (!data.ok) { setMsg("reseedMsg", data.error || "Failed.", "err"); setTag("reseedTag", "Failed", "err"); return; }
     updateStats(data.remaining);
-    setMsg("reseedMsg", "Done. Pool reseeded with " + data.remaining + " fresh keys. Distribute new keys to people who paid.", "ok");
+    setMsg("reseedMsg", "Done. Pool reseeded with " + data.remaining + " fresh keys.", "ok");
     setTag("reseedTag", "Done", "ok");
     _keys = [];
     document.getElementById("keysList").style.display = "none";
