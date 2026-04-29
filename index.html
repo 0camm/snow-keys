@@ -75,8 +75,8 @@ input:focus{border-color:rgba(255,255,255,.28);}
 
     <div class="card">
       <div class="card-title">Authentication</div>
-      <div class="card-desc">Enter your <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;">OWNER_PASS</code> from your Cloudflare worker environment.</div>
-      <input type="password" id="pass" placeholder="Your OWNER_PASS value…" />
+      <div class="card-desc">Enter your <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;">Owner Password</code> from my secret website</div>
+      <input type="password" id="pass" placeholder="Your owner password here" />
       <div class="row">
         <button class="pill primary" onclick="checkStatus()">Check status</button>
         <span id="loginTag"></span>
@@ -86,7 +86,7 @@ input:focus{border-color:rgba(255,255,255,.28);}
 
     <div class="card">
       <div class="card-title">Key Pool</div>
-      <div class="card-desc">Dump all unredeemed keys — copy and distribute to people who paid.</div>
+      <div class="card-desc">Dump all unredeemed keys or copy and give to people who paid.</div>
       <div class="row">
         <button class="pill" onclick="dumpKeys()">Load keys</button>
         <button class="pill" onclick="copyKeys()">Copy all</button>
@@ -97,12 +97,12 @@ input:focus{border-color:rgba(255,255,255,.28);}
 
     <div class="card card-danger">
       <div class="card-title" style="color:rgba(248,113,113,.8);">Danger Zone</div>
-      <div class="danger-note">Wipes all remaining keys and generates 1,000 fresh ones. Old unredeemed keys stop working immediately — this cannot be undone.</div>
+      <div class="danger-note">Wipes all keys and generates 1,000 news. Old keys will stop working and this cannot be undone.</div>
       <div class="row">
         <button class="pill danger" onclick="confirmReseed()" id="reseedBtn">Reseed pool</button>
         <span id="reseedTag"></span>
       </div>
-      <div class="feedback" id="reseedMsg">Ready — make sure your password is entered above first.</div>
+      <div class="feedback" id="reseedMsg">Ready.</div>
     </div>
   </div>
 </div>
@@ -154,7 +154,7 @@ async function checkStatus(){
   try{
     const data = await adminPost("dump");
     if(!data.ok){
-      setMsg("loginMsg", "Wrong password — check your OWNER_PASS value.", "err");
+      setMsg("loginMsg", "Wrong password", "err");
       setTag("loginTag", "Failed", "err");
       setConnected(false);
       return;
@@ -175,7 +175,7 @@ async function dumpKeys(){
   document.getElementById("keysList").style.display = "none";
   try{
     const data = await adminPost("dump");
-    if(!data.ok){ setMsg("dumpMsg", data.error || "Failed — check password.", "err"); return; }
+    if(!data.ok){ setMsg("dumpMsg", data.error || "Failed, check password.", "err"); return; }
     _keys = data.keys || [];
     updateStats(data.remaining);
     setMsg("dumpMsg", _keys.length + " keys loaded.", "ok");
@@ -192,7 +192,7 @@ function copyKeys(){
   navigator.clipboard.writeText(_keys.join("\n")).then(() => {
     setMsg("dumpMsg", "Copied " + _keys.length + " keys to clipboard.", "ok");
   }).catch(() => {
-    setMsg("dumpMsg", "Copy failed — select the list manually.", "err");
+    setMsg("dumpMsg", "Copy failed.", "err");
   });
 }
 
@@ -225,7 +225,7 @@ async function doReseed(){
     setTag("reseedTag", "Done", "ok");
     _keys = [];
     document.getElementById("keysList").style.display = "none";
-    setMsg("dumpMsg", "Pool reseeded — click Load keys to see new ones.", "");
+    setMsg("dumpMsg", "Pool reseeded, click Load keys to see new ones.", "");
   } catch(e){
     setMsg("reseedMsg", "Error: " + e.message, "err");
     setTag("reseedTag", "Error", "err");
