@@ -1,8 +1,4 @@
-<head>
- <meta name="description" content="SNOW-WEB / Snowy game hub" />
-  <title>Norwalk PS</title>
-  <link rel="icon" type="image/png" href="https://myapps.classlink.com/favicon.ico">
-</head>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#070707;color:#f6f6f6;min-height:100vh;}
@@ -12,6 +8,8 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#07
 .status-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0;transition:background .3s;}
 .status-dot.ok{background:#34d399;}
 .status-dot.err{background:#ef4444;}
+.status-dot.connecting{background:#fbbf24;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 .wrap{padding:24px;max-width:900px;margin:0 auto;}
 .eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.03);color:#bdbdbd;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px;}
 .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:24px;}
@@ -37,6 +35,7 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#07
 .feedback{font-size:13px;padding:10px 14px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,.08);color:#bdbdbd;line-height:1.5;background:rgba(255,255,255,.03);}
 .feedback.ok{border-color:rgba(52,211,153,.25);color:#34d399;background:rgba(52,211,153,.06);}
 .feedback.err{border-color:rgba(239,68,68,.25);color:#f87171;background:rgba(239,68,68,.06);}
+.feedback.warn{border-color:rgba(251,191,36,.25);color:#fbbf24;background:rgba(251,191,36,.06);}
 .keys-box{font-family:ui-monospace,monospace;font-size:11px;background:rgba(255,255,255,.03);border-radius:12px;padding:12px 14px;max-height:180px;overflow-y:auto;margin-top:12px;border:1px solid rgba(255,255,255,.08);white-space:pre;line-height:1.9;color:#bdbdbd;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;}
 .danger-note{font-size:12px;color:rgba(248,113,113,.7);margin-bottom:14px;line-height:1.6;}
 input[type=password],input[type=text]{width:100%;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#f6f6f6;padding:0 14px;outline:none;font-size:14px;font-family:inherit;transition:border-color .15s;margin-bottom:12px;}
@@ -58,31 +57,22 @@ input:focus{border-color:rgba(255,255,255,.28);}
 
   <div class="wrap">
     <div class="eyebrow">
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="width:10px;height:10px;"><circle cx="5" cy="5" r="4.5" stroke="currentColor" stroke-width="1"/><path d="M5 3v2.5l1.5 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="currentColor" stroke-width="1"/><path d="M5 3v2.5l1.5 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
       Key Pool Manager
     </div>
 
     <div class="metrics">
-      <div class="metric">
-        <div class="metric-val" id="statRemaining">—</div>
-        <div class="metric-label">Keys remaining</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">1,000</div>
-        <div class="metric-label">Pool size</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val" id="statUsed">—</div>
-        <div class="metric-label">Keys used</div>
-      </div>
+      <div class="metric"><div class="metric-val" id="statRemaining">—</div><div class="metric-label">Keys remaining</div></div>
+      <div class="metric"><div class="metric-val">1,000</div><div class="metric-label">Pool size</div></div>
+      <div class="metric"><div class="metric-val" id="statUsed">—</div><div class="metric-label">Keys used</div></div>
     </div>
 
     <div class="card">
       <div class="card-title">Authentication</div>
-      <div class="card-desc">Enter my <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;">Owner Password</code> from my secret website</div>
+      <div class="card-desc">Enter your <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;">Owner Password</code> from your secret website</div>
       <input type="password" id="pass" placeholder="Your owner password here" />
       <div class="row">
-        <button class="pill primary" onclick="checkStatus()">Check status</button>
+        <button class="pill primary" id="checkBtn" onclick="checkStatus()">Check status</button>
         <span id="loginTag"></span>
       </div>
       <div class="feedback" id="loginMsg">Enter your password and click "Check status" to begin.</div>
@@ -92,7 +82,7 @@ input:focus{border-color:rgba(255,255,255,.28);}
       <div class="card-title">Key Pool</div>
       <div class="card-desc">Dump all unredeemed keys or copy and give to people who paid.</div>
       <div class="row">
-        <button class="pill" onclick="dumpKeys()">Load keys</button>
+        <button class="pill" id="dumpBtn" onclick="dumpKeys()">Load keys</button>
         <button class="pill" onclick="copyKeys()">Copy all</button>
       </div>
       <div class="feedback" id="dumpMsg">Click "Load keys" to see available keys.</div>
@@ -101,7 +91,7 @@ input:focus{border-color:rgba(255,255,255,.28);}
 
     <div class="card card-danger">
       <div class="card-title" style="color:rgba(248,113,113,.8);">Danger Zone</div>
-      <div class="danger-note">Wipes all keys and generates 1,000 news. Old keys will stop working and this cannot be undone.</div>
+      <div class="danger-note">Wipes all keys and generates 1,000 new ones. Old keys will stop working and this cannot be undone.</div>
       <div class="row">
         <button class="pill danger" onclick="confirmReseed()" id="reseedBtn">Reseed pool</button>
         <span id="reseedTag"></span>
@@ -113,6 +103,7 @@ input:focus{border-color:rgba(255,255,255,.28);}
 
 <script>
 const API = "https://snow-api.garypaytonpg.workers.dev/api/snow";
+const TIMEOUT_MS = 10000;
 let _keys = [];
 
 function getPass(){ return document.getElementById("pass").value.trim(); }
@@ -130,11 +121,19 @@ function setTag(id, text, type){
   el.className = "badge badge-" + type;
 }
 
-function setConnected(ok){
+function setConnected(state){
   const dot = document.getElementById("statusDot");
   const lbl = document.getElementById("statusLabel");
-  dot.className = "status-dot " + (ok ? "ok" : "err");
-  lbl.textContent = ok ? "Connected" : "Not connected";
+  if(state === "ok"){
+    dot.className = "status-dot ok";
+    lbl.textContent = "Connected";
+  } else if(state === "connecting"){
+    dot.className = "status-dot connecting";
+    lbl.textContent = "Connecting…";
+  } else {
+    dot.className = "status-dot err";
+    lbl.textContent = "Not connected";
+  }
 }
 
 function updateStats(remaining){
@@ -142,44 +141,68 @@ function updateStats(remaining){
   document.getElementById("statUsed").textContent = (1000 - remaining).toLocaleString();
 }
 
+async function fetchWithTimeout(url, options, ms){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch(e){
+    clearTimeout(timer);
+    if(e.name === "AbortError") throw new Error("Request timed out after " + (ms/1000) + "s — API may be down.");
+    throw e;
+  }
+}
+
 async function adminPost(action){
   const pass = getPass();
   if(!pass) return { ok:false, error:"Enter your password first." };
-  const res = await fetch(API, {
+  const res = await fetchWithTimeout(API, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({ admin:true, pass, action })
-  });
+  }, TIMEOUT_MS);
+  if(!res.ok) throw new Error("Server returned " + res.status + " " + res.statusText);
   return res.json();
 }
 
 async function checkStatus(){
-  setMsg("loginMsg", "Checking…", "");
+  const btn = document.getElementById("checkBtn");
+  btn.disabled = true;
+  setConnected("connecting");
+  setMsg("loginMsg", "Connecting…", "warn");
+  setTag("loginTag", "Checking", "warn");
   try{
     const data = await adminPost("dump");
     if(!data.ok){
-      setMsg("loginMsg", "Wrong password", "err");
+      setMsg("loginMsg", "Wrong password — access denied.", "err");
       setTag("loginTag", "Failed", "err");
-      setConnected(false);
+      setConnected("err");
       return;
     }
     updateStats(data.remaining);
     setMsg("loginMsg", "Connected. Pool has " + data.remaining + " keys remaining.", "ok");
     setTag("loginTag", "Connected", "ok");
-    setConnected(true);
+    setConnected("ok");
   } catch(e){
-    setMsg("loginMsg", "Network error: " + e.message, "err");
+    const msg = e.message || "Unknown error";
+    setMsg("loginMsg", "Error: " + msg, "err");
     setTag("loginTag", "Error", "err");
-    setConnected(false);
+    setConnected("err");
+  } finally {
+    btn.disabled = false;
   }
 }
 
 async function dumpKeys(){
-  setMsg("dumpMsg", "Loading…", "");
+  const btn = document.getElementById("dumpBtn");
+  btn.disabled = true;
+  setMsg("dumpMsg", "Loading…", "warn");
   document.getElementById("keysList").style.display = "none";
   try{
     const data = await adminPost("dump");
-    if(!data.ok){ setMsg("dumpMsg", data.error || "Failed, check password.", "err"); return; }
+    if(!data.ok){ setMsg("dumpMsg", data.error || "Failed — check your password.", "err"); return; }
     _keys = data.keys || [];
     updateStats(data.remaining);
     setMsg("dumpMsg", _keys.length + " keys loaded.", "ok");
@@ -187,7 +210,9 @@ async function dumpKeys(){
     list.textContent = _keys.join("\n");
     list.style.display = "block";
   } catch(e){
-    setMsg("dumpMsg", "Error: " + e.message, "err");
+    setMsg("dumpMsg", "Error: " + (e.message || "Unknown error"), "err");
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -196,30 +221,34 @@ function copyKeys(){
   navigator.clipboard.writeText(_keys.join("\n")).then(() => {
     setMsg("dumpMsg", "Copied " + _keys.length + " keys to clipboard.", "ok");
   }).catch(() => {
-    setMsg("dumpMsg", "Copy failed.", "err");
+    setMsg("dumpMsg", "Copy failed — try selecting text manually.", "err");
   });
 }
 
 let _reseedConfirmed = false;
+let _reseedTimer = null;
 function confirmReseed(){
   if(!_reseedConfirmed){
     _reseedConfirmed = true;
     document.getElementById("reseedBtn").textContent = "Click again to confirm";
-    setMsg("reseedMsg", "Are you sure? This permanently wipes all existing keys.", "");
-    setTimeout(() => {
+    setMsg("reseedMsg", "Are you sure? This permanently wipes all existing keys.", "warn");
+    _reseedTimer = setTimeout(() => {
       _reseedConfirmed = false;
       document.getElementById("reseedBtn").textContent = "Reseed pool";
       setMsg("reseedMsg", "Cancelled.", "");
     }, 5000);
     return;
   }
+  clearTimeout(_reseedTimer);
   _reseedConfirmed = false;
   document.getElementById("reseedBtn").textContent = "Reseed pool";
   doReseed();
 }
 
 async function doReseed(){
-  setMsg("reseedMsg", "Reseeding…", "");
+  const btn = document.getElementById("reseedBtn");
+  btn.disabled = true;
+  setMsg("reseedMsg", "Reseeding…", "warn");
   setTag("reseedTag", "Working", "warn");
   try{
     const data = await adminPost("reseed");
@@ -229,10 +258,12 @@ async function doReseed(){
     setTag("reseedTag", "Done", "ok");
     _keys = [];
     document.getElementById("keysList").style.display = "none";
-    setMsg("dumpMsg", "Pool reseeded, click Load keys to see new ones.", "");
+    setMsg("dumpMsg", "Pool reseeded — click Load keys to see new ones.", "");
   } catch(e){
-    setMsg("reseedMsg", "Error: " + e.message, "err");
+    setMsg("reseedMsg", "Error: " + (e.message || "Unknown error"), "err");
     setTag("reseedTag", "Error", "err");
+  } finally {
+    btn.disabled = false;
   }
 }
 </script>
