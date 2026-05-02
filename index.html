@@ -3,6 +3,25 @@
   
 </head>
 
+<body>
+<div id="devtoolsBlock" style="
+position:fixed;
+inset:0;
+background:black;
+color:white;
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+font-family:sans-serif;
+text-align:center;">
+  <div>
+    <h2>Close DevTools</h2>
+    <p>You cannot use this panel with devtools open.</p>
+  </div>
+</div>
+</body>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#070707;color:#f6f6f6;min-height:100vh;}
@@ -270,4 +289,21 @@ async function doReseed(){
     btn.disabled = false;
   }
 }
+</script>
+
+<script>
+  setInterval(() => {
+  const threshold = 160;
+  const devtoolsOpen =
+    window.outerWidth - window.innerWidth > threshold ||
+    window.outerHeight - window.innerHeight > threshold;
+
+  const block = document.getElementById("devtoolsBlock");
+
+  if(devtoolsOpen){
+    block.style.display = "flex";
+  } else {
+    block.style.display = "none";
+  }
+}, 1000);
 </script>
