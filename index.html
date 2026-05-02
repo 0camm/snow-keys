@@ -1,269 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNOW-WEB Admin</title>
 
 <style>
+/* === MAIN SITE THEME SYSTEM === */
+:root {
+  --bg:#070707;
+  --panel:rgba(18,18,18,.86);
+  --text:#f6f6f6;
+  --muted:#bdbdbd;
+  --line:rgba(255,255,255,.12);
+  --line-2:rgba(255,255,255,.2);
+  --accent:#ffffff;
+  --accent-text:#0a0a0a;
+  --shadow:0 16px 48px rgba(0,0,0,.4);
+}
+
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#070707;color:#f6f6f6;min-height:100vh;}
-.topbar{background:rgba(6,6,6,.92);border-bottom:1px solid rgba(255,255,255,.1);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
-.brand-title{font-weight:900;letter-spacing:.22em;font-size:15px;text-transform:uppercase;}
-.brand-sub{color:#bdbdbd;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-top:3px;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0;transition:background .3s;}
-.status-dot.ok{background:#34d399;}
-.status-dot.err{background:#ef4444;}
-.status-dot.connecting{background:#fbbf24;animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.wrap{padding:24px;max-width:900px;margin:0 auto;}
-.eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.03);color:#bdbdbd;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px;}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:24px;}
-.metric{border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.04);padding:16px 18px;}
-.metric-val{font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1;}
-.metric-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#bdbdbd;margin-top:6px;}
-.card{background:rgba(18,18,18,.86);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;margin-bottom:14px;}
-.card-danger{border-color:rgba(239,68,68,.3);}
-.card-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#bdbdbd;margin-bottom:4px;}
-.card-desc{font-size:13px;color:rgba(189,189,189,.7);margin-bottom:16px;line-height:1.6;}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.pill{min-height:40px;padding:0 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#f6f6f6;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s,transform .15s;}
-.pill:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);transform:translateY(-1px);}
-.pill:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-.pill.primary{background:#fff;color:#0a0a0a;border-color:#fff;}
-.pill.primary:hover{background:rgba(255,255,255,.88);}
-.pill.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#fca5a5;}
-.pill.danger:hover{background:rgba(239,68,68,.2);}
-.badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px;}
-.badge-ok{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.2);}
-.badge-err{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.2);}
-.badge-warn{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2);}
-.feedback{font-size:13px;padding:10px 14px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,.08);color:#bdbdbd;line-height:1.5;background:rgba(255,255,255,.03);}
-.feedback.ok{border-color:rgba(52,211,153,.25);color:#34d399;background:rgba(52,211,153,.06);}
-.feedback.err{border-color:rgba(239,68,68,.25);color:#f87171;background:rgba(239,68,68,.06);}
-.feedback.warn{border-color:rgba(251,191,36,.25);color:#fbbf24;background:rgba(251,191,36,.06);}
-.keys-box{font-family:ui-monospace,monospace;font-size:11px;background:rgba(255,255,255,.03);border-radius:12px;padding:12px 14px;max-height:180px;overflow-y:auto;margin-top:12px;border:1px solid rgba(255,255,255,.08);white-space:pre;line-height:1.9;color:#bdbdbd;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;}
-.danger-note{font-size:12px;color:rgba(248,113,113,.7);margin-bottom:14px;line-height:1.6;}
-input[type=password],input[type=text]{width:100%;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#f6f6f6;padding:0 14px;outline:none;font-size:14px;font-family:inherit;transition:border-color .15s;margin-bottom:12px;}
-input:focus{border-color:rgba(255,255,255,.28);}
-::placeholder{color:rgba(189,189,189,.45);}
+
+body{
+  font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* === TOPBAR (MATCHED) === */
+.topbar{
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(12px);
+  background:rgba(6,6,6,.75);
+  border-bottom:1px solid var(--line);
+  padding:14px 24px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.brand-title{
+  font-weight:900;
+  letter-spacing:.22em;
+  font-size:15px;
+  text-transform:uppercase;
+}
+.brand-sub{
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:.18em;
+}
+
+/* === WRAP === */
+.wrap{
+  max-width:1000px;
+  margin:0 auto;
+  padding:24px;
+}
+
+/* === CARDS (MATCH MAIN PANEL STYLE) === */
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.card-title{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+/* === BUTTONS (MATCH MAIN SITE) === */
+.pill{
+  min-height:40px;
+  padding:0 16px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:600;
+  transition:.15s;
+}
+.pill:hover{
+  border-color:var(--line-2);
+  background:rgba(255,255,255,.07);
+}
+
+.pill.primary{
+  background:var(--accent);
+  color:var(--accent-text);
+  border-color:var(--accent);
+}
+
+/* === INPUT === */
+input{
+  width:100%;
+  height:44px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  padding:0 12px;
+  margin-bottom:10px;
+}
+
+/* === STATUS === */
+.feedback{
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  color:var(--muted);
+}
+
+/* === METRICS === */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+.metric{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  padding:14px;
+  border-radius:16px;
+}
+.metric-val{
+  font-size:26px;
+  font-weight:900;
+}
+.metric-label{
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+/* === ROW === */
+.row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
 </style>
+</head>
 
-<div style="background:#070707;min-height:600px;border-radius:16px;overflow:hidden;">
-  <div class="topbar">
-    <div>
-      <div class="brand-title">SNOW-WEB</div>
-      <div class="brand-sub">Admin Panel</div>
+<body>
+
+  <div id="devtoolsBlock" style="
+position:fixed;
+inset:0;
+background:black;
+color:white;
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+font-family:sans-serif;
+text-align:center;">
+  <div>
+    <h2>Close DevTools</h2>
+    <p>You cannot use this panel with devtools open.</p>
+  </div>
+</div>
+
+<div class="topbar">
+  <div>
+    <div class="brand-title">SNOW-WEB</div>
+    <div class="brand-sub">Admin Panel</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-val" id="remaining">—</div>
+      <div class="metric-label">Remaining</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div class="status-dot" id="statusDot"></div>
-      <span id="statusLabel" style="font-size:12px;color:#bdbdbd;letter-spacing:.06em;">Not connected</span>
+    <div class="metric">
+      <div class="metric-val">1000</div>
+      <div class="metric-label">Pool</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" id="used">—</div>
+      <div class="metric-label">Used</div>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="eyebrow">
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="currentColor" stroke-width="1"/><path d="M5 3v2.5l1.5 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-      Key Pool Manager
+  <!-- AUTH -->
+  <div class="card">
+    <div class="card-title">Authentication</div>
+    <input id="pass" type="password" placeholder="Owner password">
+    <div class="row">
+      <button class="pill primary" onclick="check()">Check</button>
     </div>
-
-    <div class="metrics">
-      <div class="metric"><div class="metric-val" id="statRemaining">—</div><div class="metric-label">Keys remaining</div></div>
-      <div class="metric"><div class="metric-val">1,000</div><div class="metric-label">Pool size</div></div>
-      <div class="metric"><div class="metric-val" id="statUsed">—</div><div class="metric-label">Keys used</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Authentication</div>
-      <div class="card-desc">Enter your <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;">Owner Password</code> from your secret website</div>
-      <input type="password" id="pass" placeholder="Your owner password here" />
-      <div class="row">
-        <button class="pill primary" id="checkBtn" onclick="checkStatus()">Check status</button>
-        <span id="loginTag"></span>
-      </div>
-      <div class="feedback" id="loginMsg">Enter your password and click "Check status" to begin.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Key Pool</div>
-      <div class="card-desc">Dump all unredeemed keys or copy and give to people who paid.</div>
-      <div class="row">
-        <button class="pill" id="dumpBtn" onclick="dumpKeys()">Load keys</button>
-        <button class="pill" onclick="copyKeys()">Copy all</button>
-      </div>
-      <div class="feedback" id="dumpMsg">Click "Load keys" to see available keys.</div>
-      <div class="keys-box" id="keysList" style="display:none"></div>
-    </div>
-
-    <div class="card card-danger">
-      <div class="card-title" style="color:rgba(248,113,113,.8);">Danger Zone</div>
-      <div class="danger-note">Wipes all keys and generates 1,000 new ones. Old keys will stop working and this cannot be undone.</div>
-      <div class="row">
-        <button class="pill danger" onclick="confirmReseed()" id="reseedBtn">Reseed pool</button>
-        <span id="reseedTag"></span>
-      </div>
-      <div class="feedback" id="reseedMsg">Ready.</div>
-    </div>
+    <div class="feedback" id="status">Idle</div>
   </div>
+
+  <!-- KEYS -->
+  <div class="card">
+    <div class="card-title">Keys</div>
+    <div class="row">
+      <button class="pill" onclick="dump()">Load</button>
+      <button class="pill" onclick="copy()">Copy</button>
+    </div>
+    <div class="feedback" id="keysStatus">No data</div>
+  </div>
+
+  <!-- RESEED -->
+  <div class="card">
+    <div class="card-title">Danger</div>
+    <button class="pill" onclick="reseed()">Reseed</button>
+    <div class="feedback" id="reseedStatus">Ready</div>
+  </div>
+
 </div>
 
 <script>
 const API = "https://snow-api.garypaytonpg.workers.dev/api/snow";
-const TIMEOUT_MS = 10000;
-let _keys = [];
 
-function getPass(){ return document.getElementById("pass").value.trim(); }
-
-function setMsg(id, text, type){
-  const el = document.getElementById(id);
-  el.textContent = text;
-  el.className = "feedback" + (type ? " " + type : "");
+function getPass(){
+  return document.getElementById("pass").value;
 }
 
-function setTag(id, text, type){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.textContent = text;
-  el.className = "badge badge-" + type;
-}
-
-function setConnected(state){
-  const dot = document.getElementById("statusDot");
-  const lbl = document.getElementById("statusLabel");
-  if(state === "ok"){
-    dot.className = "status-dot ok";
-    lbl.textContent = "Connected";
-  } else if(state === "connecting"){
-    dot.className = "status-dot connecting";
-    lbl.textContent = "Connecting…";
-  } else {
-    dot.className = "status-dot err";
-    lbl.textContent = "Not connected";
-  }
-}
-
-function updateStats(remaining){
-  document.getElementById("statRemaining").textContent = remaining.toLocaleString();
-  document.getElementById("statUsed").textContent = (1000 - remaining).toLocaleString();
-}
-
-async function fetchWithTimeout(url, options, ms){
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), ms);
-  try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
-    clearTimeout(timer);
-    return res;
-  } catch(e){
-    clearTimeout(timer);
-    if(e.name === "AbortError") throw new Error("Request timed out after " + (ms/1000) + "s — API may be down.");
-    throw e;
-  }
-}
-
-async function adminPost(action){
-  const pass = getPass();
-  if(!pass) return { ok:false, error:"Enter your password first." };
-  const res = await fetchWithTimeout(API, {
+async function check(){
+  document.getElementById("status").innerText = "Checking...";
+  const res = await fetch(API,{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ admin:true, pass, action })
-  }, TIMEOUT_MS);
-  if(!res.ok) throw new Error("Server returned " + res.status + " " + res.statusText);
-  return res.json();
-}
-
-async function checkStatus(){
-  const btn = document.getElementById("checkBtn");
-  btn.disabled = true;
-  setConnected("connecting");
-  setMsg("loginMsg", "Connecting…", "warn");
-  setTag("loginTag", "Checking", "warn");
-  try{
-    const data = await adminPost("dump");
-    if(!data.ok){
-      setMsg("loginMsg", "Wrong password — access denied.", "err");
-      setTag("loginTag", "Failed", "err");
-      setConnected("err");
-      return;
-    }
-    updateStats(data.remaining);
-    setMsg("loginMsg", "Connected. Pool has " + data.remaining + " keys remaining.", "ok");
-    setTag("loginTag", "Connected", "ok");
-    setConnected("ok");
-  } catch(e){
-    const msg = e.message || "Unknown error";
-    setMsg("loginMsg", "Error: " + msg, "err");
-    setTag("loginTag", "Error", "err");
-    setConnected("err");
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-async function dumpKeys(){
-  const btn = document.getElementById("dumpBtn");
-  btn.disabled = true;
-  setMsg("dumpMsg", "Loading…", "warn");
-  document.getElementById("keysList").style.display = "none";
-  try{
-    const data = await adminPost("dump");
-    if(!data.ok){ setMsg("dumpMsg", data.error || "Failed — check your password.", "err"); return; }
-    _keys = data.keys || [];
-    updateStats(data.remaining);
-    setMsg("dumpMsg", _keys.length + " keys loaded.", "ok");
-    const list = document.getElementById("keysList");
-    list.textContent = _keys.join("\n");
-    list.style.display = "block";
-  } catch(e){
-    setMsg("dumpMsg", "Error: " + (e.message || "Unknown error"), "err");
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-function copyKeys(){
-  if(!_keys.length){ setMsg("dumpMsg", "Load keys first.", "err"); return; }
-  navigator.clipboard.writeText(_keys.join("\n")).then(() => {
-    setMsg("dumpMsg", "Copied " + _keys.length + " keys to clipboard.", "ok");
-  }).catch(() => {
-    setMsg("dumpMsg", "Copy failed — try selecting text manually.", "err");
+    body:JSON.stringify({admin:true,pass:getPass(),action:"dump"})
   });
-}
+  const data = await res.json();
 
-let _reseedConfirmed = false;
-let _reseedTimer = null;
-function confirmReseed(){
-  if(!_reseedConfirmed){
-    _reseedConfirmed = true;
-    document.getElementById("reseedBtn").textContent = "Click again to confirm";
-    setMsg("reseedMsg", "Are you sure? This permanently wipes all existing keys.", "warn");
-    _reseedTimer = setTimeout(() => {
-      _reseedConfirmed = false;
-      document.getElementById("reseedBtn").textContent = "Reseed pool";
-      setMsg("reseedMsg", "Cancelled.", "");
-    }, 5000);
+  if(!data.ok){
+    document.getElementById("status").innerText = "Wrong password";
     return;
   }
-  clearTimeout(_reseedTimer);
-  _reseedConfirmed = false;
-  document.getElementById("reseedBtn").textContent = "Reseed pool";
-  doReseed();
+
+  document.getElementById("status").innerText = "Connected";
+  document.getElementById("remaining").innerText = data.remaining;
+  document.getElementById("used").innerText = 1000 - data.remaining;
 }
 
-async function doReseed(){
-  const btn = document.getElementById("reseedBtn");
-  btn.disabled = true;
-  setMsg("reseedMsg", "Reseeding…", "warn");
-  setTag("reseedTag", "Working", "warn");
-  try{
-    const data = await adminPost("reseed");
-    if(!data.ok){ setMsg("reseedMsg", data.error || "Failed.", "err"); setTag("reseedTag", "Failed", "err"); return; }
-    updateStats(data.remaining);
-    setMsg("reseedMsg", "Done. Pool reseeded with " + data.remaining + " fresh keys.", "ok");
-    setTag("reseedTag", "Done", "ok");
-    _keys = [];
-    document.getElementById("keysList").style.display = "none";
-    setMsg("dumpMsg", "Pool reseeded — click Load keys to see new ones.", "");
-  } catch(e){
-    setMsg("reseedMsg", "Error: " + (e.message || "Unknown error"), "err");
-    setTag("reseedTag", "Error", "err");
-  } finally {
-    btn.disabled = false;
+async function dump(){
+  document.getElementById("keysStatus").innerText = "Loading...";
+  const res = await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({admin:true,pass:getPass(),action:"dump"})
+  });
+  const data = await res.json();
+
+  if(!data.ok){
+    document.getElementById("keysStatus").innerText = "Error";
+    return;
   }
+
+  window.keys = data.keys;
+  document.getElementById("keysStatus").innerText = data.keys.length + " keys loaded";
+}
+
+function copy(){
+  if(!window.keys) return;
+  navigator.clipboard.writeText(window.keys.join("\n"));
+}
+
+async function reseed(){
+  document.getElementById("reseedStatus").innerText = "Working...";
+  const res = await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({admin:true,pass:getPass(),action:"reseed"})
+  });
+  const data = await res.json();
+  document.getElementById("reseedStatus").innerText = "Done";
 }
 </script>
+
+<script>
+const block = document.getElementById("devtoolsBlock");
+
+setInterval(() => {
+  if(!block) return;
+
+  const open =
+    window.outerWidth - window.innerWidth > 160 ||
+    window.outerHeight - window.innerHeight > 160;
+
+  block.style.display = open ? "flex" : "none";
+}, 1000);
+</script>
+
+</body>
+
+  
+</html>
