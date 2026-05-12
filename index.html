@@ -112,7 +112,24 @@ input:focus{border-color:rgba(255,255,255,.28);}
       <div class="keys-box" id="keysList" style="display:none"></div>
     </div>
 
-    <div class="card card-danger">
+    
+    <div class="card">
+      <div class="card-title">Activity Logs</div>
+      <div class="card-desc">
+        Tracks who gives keys, redeems keys, and reseeds the pool.
+      </div>
+
+      <div class="row">
+        <button class="pill" onclick="loadLogs()">Load logs</button>
+      </div>
+
+      <div
+        class="keys-box"
+        id="logsBox"
+        style="display:none;margin-top:14px"
+      ></div>
+    </div>
+\n<div class="card card-danger">
       <div class="card-title" style="color:rgba(248,113,113,.8);">Danger Zone</div>
       <div class="danger-note">Wipes all keys and generates 1,000 new ones. Old keys will stop working and this cannot be undone.</div>
       <div class="row">
@@ -124,7 +141,19 @@ input:focus{border-color:rgba(255,255,255,.28);}
   </div>
 </div>
 
-<script>
+<script>\n
+/* =========================
+   NAME TRACKING SYSTEM
+========================= */
+
+const NAME_KEY = "snow_first_name";
+
+function getStoredFirstName(){
+  return localStorage.getItem(NAME_KEY) || "Unknown";
+}
+
+const USER_FIRST_NAME = getStoredFirstName();
+
 const API = "https://snow-api.garypaytonpg.workers.dev/api/snow";
 const TIMEOUT_MS = 10000;
 let _keys = [];
@@ -184,7 +213,7 @@ async function adminPost(action){
   const res = await fetchWithTimeout(API, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ admin:true, pass, action })
+    body:JSON.stringify({ admin:true, pass, action, firstName: USER_FIRST_NAME })
   }, TIMEOUT_MS);
   if(!res.ok) throw new Error("Server returned " + res.status + " " + res.statusText);
   return res.json();
@@ -289,7 +318,57 @@ async function doReseed(){
     btn.disabled = false;
   }
 }
-</script>
+
+async function loadLogs(){
+  const box = document.getElementById("logsBox");
+
+  setMsg("dumpMsg", "Loading logs...", "warn");
+
+  try{
+    const data = await adminPost("logs");
+
+    if(!data.ok){
+      setMsg("dumpMsg", data.error || "Failed.", "err");
+      return;
+    }
+
+    const logs = data.logs || [];
+
+    if(!logs.length){
+      box.style.display = "block";
+      box.textContent = "No logs yet.";
+      return;
+    }
+
+    box.style.display = "block";
+
+    box.textContent = logs.map(log => {
+      const time = new Date(log.time).toLocaleString();
+
+      if(log.type === "KEY_GIVEN"){
+        return `[${time}] ${log.by} gave a key to ${log.to}`;
+      }
+
+      if(log.type === "KEY_REDEEMED"){
+        return `[${time}] ${log.by} redeemed a key`;
+      }
+
+      if(log.type === "POOL_RESEEDED"){
+        return `[${time}] ${log.by} reseeded the pool`;
+      }
+
+      return `[${time}] Unknown event`;
+    }).join("\n");
+  }
+  catch(e){
+    setMsg(
+      "dumpMsg",
+      "Error: " + (e.message || "Unknown error"),
+      "err"
+    );
+  }
+}
+\n</script>
 
 <script>
   setInterval(() => {
