@@ -20,6 +20,18 @@ text-align:center;">
     <p>You cannot use this panel with devtools open.</p>
   </div>
 </div>
+
+<!-- Name Gate -->
+<div class="name-gate" id="nameGate">
+  <div class="name-gate-card">
+    <div class="name-gate-logo">🔑</div>
+    <h2 class="name-gate-title">Admin Panel</h2>
+    <p class="name-gate-sub">Enter your first name to identify who's performing admin actions.</p>
+    <input class="name-gate-input" id="nameGateInput" type="text" placeholder="Your first name…" maxlength="20" autocomplete="given-name" spellcheck="false" />
+    <div class="name-gate-hint" id="nameGateHint">3–20 characters, first name only.</div>
+    <button class="name-gate-btn" type="button" onclick="submitAdminNameGate()">Enter Panel →</button>
+  </div>
+</div>
 </body>
 
 <style>
@@ -64,6 +76,28 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#07
 input[type=password],input[type=text]{width:100%;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#f6f6f6;padding:0 14px;outline:none;font-size:14px;font-family:inherit;transition:border-color .15s;margin-bottom:12px;}
 input:focus{border-color:rgba(255,255,255,.28);}
 ::placeholder{color:rgba(189,189,189,.45);}
+
+/* Name Gate */
+.name-gate{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.96);backdrop-filter:blur(20px);}
+.name-gate-card{width:min(400px,100%);border:1px solid rgba(255,255,255,.15);border-radius:22px;background:rgba(12,12,12,.98);box-shadow:0 24px 80px rgba(0,0,0,.7);padding:28px 26px 22px;text-align:center;}
+.name-gate-logo{font-size:32px;margin-bottom:12px;}
+.name-gate-title{font-size:20px;font-weight:900;letter-spacing:-.03em;margin:0 0 8px;}
+.name-gate-sub{color:#bdbdbd;font-size:13px;line-height:1.6;margin:0 0 18px;}
+.name-gate-input{width:100%;min-height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#f6f6f6;padding:0 14px;outline:none;font-size:15px;font-family:inherit;text-align:center;transition:border-color .15s;margin-bottom:10px;}
+.name-gate-input:focus{border-color:rgba(255,255,255,.38);}
+.name-gate-hint{font-size:12px;color:#bdbdbd;margin-bottom:14px;min-height:16px;}
+.name-gate-hint.err{color:#f87171;}
+.name-gate-btn{width:100%;min-height:46px;border-radius:12px;border:1px solid #fff;background:#fff;color:#0a0a0a;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s,transform .15s;}
+.name-gate-btn:hover{opacity:.88;transform:translateY(-1px);}
+
+/* Admin name badge */
+.admin-name-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:12px;color:#f6f6f6;font-weight:700;}
+
+/* Log entries */
+.log-entry{font-size:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);color:#bdbdbd;line-height:1.5;}
+.log-entry:last-child{border-bottom:none;}
+.log-entry .actor{color:#f6f6f6;font-weight:700;}
+.log-entry .ts{color:rgba(189,189,189,.5);font-size:11px;}
 </style>
 
 <div style="background:#070707;min-height:600px;border-radius:16px;overflow:hidden;">
@@ -73,6 +107,7 @@ input:focus{border-color:rgba(255,255,255,.28);}
       <div class="brand-sub">Admin Panel</div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
+      <div id="adminNameBadge" style="display:none;" class="admin-name-badge">👤 <span id="adminNameDisplay"></span></div>
       <div class="status-dot" id="statusDot"></div>
       <span id="statusLabel" style="font-size:12px;color:#bdbdbd;letter-spacing:.06em;">Not connected</span>
     </div>
@@ -121,13 +156,87 @@ input:focus{border-color:rgba(255,255,255,.28);}
       </div>
       <div class="feedback" id="reseedMsg">Ready.</div>
     </div>
+
+    <div class="card">
+      <div class="card-title">Activity Log</div>
+      <div class="card-desc">Actions performed during this session, with admin name attribution.</div>
+      <div class="keys-box" id="activityLog" style="display:block;min-height:60px;">No activity yet.</div>
+    </div>
   </div>
 </div>
 
 <script>
 const API = "https://snow-api.garypaytonpg.workers.dev/api/snow";
 const TIMEOUT_MS = 10000;
+const ADMIN_NAME_KEY = "snow_admin_name_v1";
 let _keys = [];
+let _adminName = "";
+
+/* ── Name Gate ── */
+function getAdminName() {
+  return localStorage.getItem(ADMIN_NAME_KEY) || "";
+}
+
+function submitAdminNameGate() {
+  const input = document.getElementById("nameGateInput");
+  const hint  = document.getElementById("nameGateHint");
+  const raw   = (input?.value || "").trim();
+
+  if (raw.length < 3) {
+    hint.textContent = "Name must be at least 3 characters.";
+    hint.className = "name-gate-hint err";
+    input.focus();
+    return;
+  }
+  if (raw.length > 20) {
+    hint.textContent = "Name can be at most 20 characters.";
+    hint.className = "name-gate-hint err";
+    input.focus();
+    return;
+  }
+  if (!/^[a-zA-Z'-]+$/.test(raw)) {
+    hint.textContent = "Letters only please.";
+    hint.className = "name-gate-hint err";
+    input.focus();
+    return;
+  }
+
+  const name = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+  localStorage.setItem(ADMIN_NAME_KEY, name);
+  _adminName = name;
+  document.getElementById("nameGate").style.display = "none";
+  document.getElementById("adminNameBadge").style.display = "flex";
+  document.getElementById("adminNameDisplay").textContent = name;
+}
+
+function initAdminNameGate() {
+  const saved = getAdminName();
+  if (saved) {
+    _adminName = saved;
+    document.getElementById("nameGate").style.display = "none";
+    document.getElementById("adminNameBadge").style.display = "flex";
+    document.getElementById("adminNameDisplay").textContent = saved;
+    return;
+  }
+  document.getElementById("nameGateInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") submitAdminNameGate();
+  });
+  setTimeout(() => document.getElementById("nameGateInput")?.focus(), 80);
+}
+
+/* ── Activity Log ── */
+function logActivity(msg) {
+  const box = document.getElementById("activityLog");
+  const actor = _adminName || "Unknown";
+  const ts = new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit", second:"2-digit" });
+  const prev = box.textContent === "No activity yet." ? "" : box.innerHTML;
+  box.innerHTML = prev + `<div class="log-entry"><span class="actor">${escLog(actor)}</span> — ${escLog(msg)} <span class="ts">${ts}</span></div>`;
+  box.scrollTop = box.scrollHeight;
+}
+
+function escLog(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" }[c]));
+}
 
 function getPass(){ return document.getElementById("pass").value.trim(); }
 
@@ -202,17 +311,20 @@ async function checkStatus(){
       setMsg("loginMsg", "Wrong password — access denied.", "err");
       setTag("loginTag", "Failed", "err");
       setConnected("err");
+      logActivity("Failed login attempt (wrong password)");
       return;
     }
     updateStats(data.remaining);
     setMsg("loginMsg", "Connected. Pool has " + data.remaining + " keys remaining.", "ok");
     setTag("loginTag", "Connected", "ok");
     setConnected("ok");
+    logActivity("Checked status — " + data.remaining + " keys remaining");
   } catch(e){
     const msg = e.message || "Unknown error";
     setMsg("loginMsg", "Error: " + msg, "err");
     setTag("loginTag", "Error", "err");
     setConnected("err");
+    logActivity("Status check error: " + msg);
   } finally {
     btn.disabled = false;
   }
@@ -232,8 +344,10 @@ async function dumpKeys(){
     const list = document.getElementById("keysList");
     list.textContent = _keys.join("\n");
     list.style.display = "block";
+    logActivity("Loaded key pool — " + _keys.length + " keys available");
   } catch(e){
     setMsg("dumpMsg", "Error: " + (e.message || "Unknown error"), "err");
+    logActivity("Load keys error: " + (e.message || "Unknown error"));
   } finally {
     btn.disabled = false;
   }
@@ -243,8 +357,10 @@ function copyKeys(){
   if(!_keys.length){ setMsg("dumpMsg", "Load keys first.", "err"); return; }
   navigator.clipboard.writeText(_keys.join("\n")).then(() => {
     setMsg("dumpMsg", "Copied " + _keys.length + " keys to clipboard.", "ok");
+    logActivity("Copied " + _keys.length + " keys to clipboard");
   }).catch(() => {
     setMsg("dumpMsg", "Copy failed — try selecting text manually.", "err");
+    logActivity("Copy keys failed");
   });
 }
 
@@ -255,10 +371,12 @@ function confirmReseed(){
     _reseedConfirmed = true;
     document.getElementById("reseedBtn").textContent = "Click again to confirm";
     setMsg("reseedMsg", "Are you sure? This permanently wipes all existing keys.", "warn");
+    logActivity("Initiated reseed confirmation");
     _reseedTimer = setTimeout(() => {
       _reseedConfirmed = false;
       document.getElementById("reseedBtn").textContent = "Reseed pool";
       setMsg("reseedMsg", "Cancelled.", "");
+      logActivity("Reseed cancelled (timed out)");
     }, 5000);
     return;
   }
@@ -273,22 +391,27 @@ async function doReseed(){
   btn.disabled = true;
   setMsg("reseedMsg", "Reseeding…", "warn");
   setTag("reseedTag", "Working", "warn");
+  logActivity("Reseeding pool…");
   try{
     const data = await adminPost("reseed");
-    if(!data.ok){ setMsg("reseedMsg", data.error || "Failed.", "err"); setTag("reseedTag", "Failed", "err"); return; }
+    if(!data.ok){ setMsg("reseedMsg", data.error || "Failed.", "err"); setTag("reseedTag", "Failed", "err"); logActivity("Reseed failed: " + (data.error || "Unknown")); return; }
     updateStats(data.remaining);
     setMsg("reseedMsg", "Done. Pool reseeded with " + data.remaining + " fresh keys.", "ok");
     setTag("reseedTag", "Done", "ok");
     _keys = [];
     document.getElementById("keysList").style.display = "none";
     setMsg("dumpMsg", "Pool reseeded — click Load keys to see new ones.", "");
+    logActivity("Pool reseeded — " + data.remaining + " fresh keys generated");
   } catch(e){
     setMsg("reseedMsg", "Error: " + (e.message || "Unknown error"), "err");
     setTag("reseedTag", "Error", "err");
+    logActivity("Reseed error: " + (e.message || "Unknown error"));
   } finally {
     btn.disabled = false;
   }
 }
+
+initAdminNameGate();
 </script>
 
 <script>
