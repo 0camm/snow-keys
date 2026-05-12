@@ -307,3 +307,60 @@ async function doReseed(){
   }
 }, 1000);
 </script>
+
+<!-- NAME TRACKING SYSTEM -->
+<script>
+const NAME_KEY = "snow_first_name";
+
+function validateFirstName(name){
+  name = String(name || "").trim();
+  return /^[A-Za-z]{3,20}$/.test(name);
+}
+
+function getSavedFirstName(){
+  return localStorage.getItem(NAME_KEY) || "";
+}
+
+async function ensureFirstName(){
+  let existing = getSavedFirstName();
+
+  while(!validateFirstName(existing)){
+    existing = prompt("Enter your first name (3-20 letters only):") || "";
+
+    if(!validateFirstName(existing)){
+      alert("Invalid first name.");
+      continue;
+    }
+
+    localStorage.setItem(NAME_KEY, existing);
+  }
+
+  window.SNOW_FIRST_NAME = existing;
+}
+
+const _oldAdminPost = adminPost;
+
+adminPost = async function(action){
+  const pass = getPass();
+  if(!pass) return { ok:false, error:"Enter your password first." };
+
+  const res = await fetchWithTimeout(API, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      admin:true,
+      pass,
+      action,
+      firstName:window.SNOW_FIRST_NAME
+    })
+  }, TIMEOUT_MS);
+
+  if(!res.ok){
+    throw new Error("Server returned " + res.status + " " + res.statusText);
+  }
+
+  return res.json();
+};
+
+ensureFirstName();
+</script>
