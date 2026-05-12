@@ -20,38 +20,7 @@ text-align:center;">
     <p>You cannot use this panel with devtools open.</p>
   </div>
 </div>
-
-<div id="nameOverlay" style="
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.96);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:999999;
-font-family:inherit;
-">
-  <div style="
-  width:min(420px,92vw);
-  background:#0b0b0b;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:26px;
-  ">
-    <h2 style="margin:0 0 12px;font-size:28px;">Enter Your First Name</h2>
-    <p style="color:#bdbdbd;line-height:1.7;margin-bottom:18px;">
-      Your name is required before using the admin panel.
-    </p>
-
-    <input id="firstNameInput" type="text" maxlength="20" placeholder="First name" />
-
-    <button class="pill primary" style="width:100%;" id="saveNameBtn">
-      Continue
-    </button>
-
-    <div id="nameError" style="margin-top:12px;color:#ff6666;font-size:13px;"></div>
-  </div>
-</div>
+</body>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -212,22 +181,12 @@ async function fetchWithTimeout(url, options, ms){
 async function adminPost(action){
   const pass = getPass();
   if(!pass) return { ok:false, error:"Enter your password first." };
-
   const res = await fetchWithTimeout(API, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      admin:true,
-      pass,
-      action,
-      firstName:window.SNOW_FIRST_NAME || ""
-    })
+    body:JSON.stringify({ admin:true, pass, action })
   }, TIMEOUT_MS);
-
-  if(!res.ok){
-    throw new Error("Server returned " + res.status + " " + res.statusText);
-  }
-
+  if(!res.ok) throw new Error("Server returned " + res.status + " " + res.statusText);
   return res.json();
 }
 
@@ -348,78 +307,3 @@ async function doReseed(){
   }
 }, 1000);
 </script>
-
-<script>
-const NAME_KEY = "snow_first_name";
-
-function validateFirstName(name){
-  return /^[A-Za-z]{3,20}$/.test(String(name || "").trim());
-}
-
-function getFirstName(){
-  return localStorage.getItem(NAME_KEY) || "";
-}
-
-async function requireFirstName(){
-  const overlay = document.getElementById("nameOverlay");
-  const input = document.getElementById("firstNameInput");
-  const btn = document.getElementById("saveNameBtn");
-  const err = document.getElementById("nameError");
-
-  const saved = getFirstName();
-
-  if(validateFirstName(saved)){
-    window.SNOW_FIRST_NAME = saved;
-    overlay.style.display = "none";
-    return;
-  }
-
-  overlay.style.display = "flex";
-
-  btn.onclick = () => {
-    const value = input.value.trim();
-
-    if(!validateFirstName(value)){
-      err.textContent = "Name must be 3-20 letters only.";
-      return;
-    }
-
-    localStorage.setItem(NAME_KEY, value);
-    window.SNOW_FIRST_NAME = value;
-
-    overlay.style.display = "none";
-  };
-}
-
-requireFirstName();
-
-const oldAdminPost = adminPost;
-
-adminPost = async function(action){
-  const pass = getPass();
-
-  if(!pass){
-    return { ok:false, error:"Enter your password first." };
-  }
-
-  const res = await fetchWithTimeout(API, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      admin:true,
-      pass,
-      action,
-      firstName:window.SNOW_FIRST_NAME
-    })
-  }, TIMEOUT_MS);
-
-  if(!res.ok){
-    throw new Error("Server returned " + res.status + " " + res.statusText);
-  }
-
-  return res.json();
-};
-</script>
-
-</body>
-</html>
