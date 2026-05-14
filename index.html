@@ -32,7 +32,6 @@ text-align:center;">
     <button class="name-gate-btn" type="button" onclick="submitAdminNameGate()">Enter Panel →</button>
   </div>
 </div>
-</body>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -182,7 +181,6 @@ let _keys = [];
 let _adminName = "";
 let _logPollInterval = null;
 
-/* ── Name Gate ── */
 function getAdminName() {
   return localStorage.getItem(ADMIN_NAME_KEY) || "";
 }
@@ -191,34 +189,15 @@ function submitAdminNameGate() {
   const input = document.getElementById("nameGateInput");
   const hint  = document.getElementById("nameGateHint");
   const raw   = (input?.value || "").trim();
-
-  if (raw.length < 3) {
-    hint.textContent = "Name must be at least 3 characters.";
-    hint.className = "name-gate-hint err";
-    input.focus();
-    return;
-  }
-  if (raw.length > 20) {
-    hint.textContent = "Name can be at most 20 characters.";
-    hint.className = "name-gate-hint err";
-    input.focus();
-    return;
-  }
-  if (!/^[a-zA-Z'-]+$/.test(raw)) {
-    hint.textContent = "Letters only please.";
-    hint.className = "name-gate-hint err";
-    input.focus();
-    return;
-  }
-
+  if (raw.length < 3) { hint.textContent = "Name must be at least 3 characters."; hint.className = "name-gate-hint err"; input.focus(); return; }
+  if (raw.length > 20) { hint.textContent = "Name can be at most 20 characters."; hint.className = "name-gate-hint err"; input.focus(); return; }
+  if (!/^[a-zA-Z'-]+$/.test(raw)) { hint.textContent = "Letters only please."; hint.className = "name-gate-hint err"; input.focus(); return; }
   const name = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
   localStorage.setItem(ADMIN_NAME_KEY, name);
   _adminName = name;
   document.getElementById("nameGate").style.display = "none";
   document.getElementById("adminNameBadge").style.display = "flex";
   document.getElementById("adminNameDisplay").textContent = name;
-  loadLog();
-  startLogPoll();
 }
 
 function initAdminNameGate() {
@@ -228,8 +207,6 @@ function initAdminNameGate() {
     document.getElementById("nameGate").style.display = "none";
     document.getElementById("adminNameBadge").style.display = "flex";
     document.getElementById("adminNameDisplay").textContent = saved;
-    loadLog();
-    startLogPoll();
     return;
   }
   document.getElementById("nameGateInput").addEventListener("keydown", e => {
@@ -238,21 +215,15 @@ function initAdminNameGate() {
   setTimeout(() => document.getElementById("nameGateInput")?.focus(), 80);
 }
 
-/* ── Persistent Activity Log ── */
 function escLog(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
 function actionLabel(action) {
   const map = {
-    "check_status":   "checked status",
-    "load_keys":      "loaded key pool",
-    "copy_all_keys":  "copied ALL keys to clipboard",
-    "copy_key":       "copied key",
-    "reseed":         "reseeded the pool",
-    "reseed_confirm": "confirmed reseed",
-    "redeemed_key":   "redeemed key",
-    "reseed_cancel":  "cancelled reseed",
+    "check_status":"checked status","load_keys":"loaded key pool",
+    "copy_all_keys":"copied ALL keys to clipboard","copy_key":"copied key",
+    "reseed":"reseeded the pool","redeemed_key":"redeemed key","reseed_cancel":"cancelled reseed"
   };
   return map[action] || action;
 }
@@ -270,26 +241,25 @@ function renderLog(entries) {
     box.innerHTML = '<span style="color:rgba(189,189,189,.4);font-size:12px;">No activity yet.</span>';
     return;
   }
-  // Newest first
   const sorted = [...entries].reverse();
   box.innerHTML = sorted.map(e => {
-    const ts   = new Date(e.ts).toLocaleString([], { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit", second:"2-digit" });
-    const lbl  = escLog(actionLabel(e.action));
-    const col  = actionColor(e.action);
-    const det  = e.detail ? ` <span style="color:rgba(189,189,189,.6);font-size:10px;font-family:ui-monospace,monospace;">${escLog(e.detail)}</span>` : "";
+    const ts  = new Date(e.ts).toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    const lbl = escLog(actionLabel(e.action));
+    const col = actionColor(e.action);
+    const det = e.detail ? ` <span style="color:rgba(189,189,189,.6);font-size:10px;font-family:ui-monospace,monospace;">${escLog(e.detail)}</span>` : "";
     return `<div class="log-entry"><span class="actor">${escLog(e.actor)}</span> <span style="color:${col}">${lbl}</span>${det} <span class="ts">${ts}</span></div>`;
   }).join("");
-  box.scrollTop = 0; // newest on top
+  box.scrollTop = 0;
 }
 
 async function loadLog() {
   const pass = getPass();
-  if (!pass) return; // silently skip if no password yet
+  if (!pass) return;
   try {
     const res = await fetchWithTimeout(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ admin: true, pass, action: "getlog" })
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({admin:true,pass,action:"getlog"})
     }, TIMEOUT_MS);
     const data = await res.json();
     if (data.ok) renderLog(data.entries || []);
@@ -299,7 +269,7 @@ async function loadLog() {
 function startLogPoll() {
   if (_logPollInterval) return;
   document.getElementById("logLiveTag").style.display = "";
-  _logPollInterval = setInterval(loadLog, 8000); // refresh every 8s
+  _logPollInterval = setInterval(loadLog, 8000);
 }
 
 async function remoteLog(logAction, detail = "") {
@@ -307,11 +277,10 @@ async function remoteLog(logAction, detail = "") {
   if (!pass) return;
   try {
     await fetchWithTimeout(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ admin: true, pass, action: "log", actor: _adminName, logAction, detail })
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({admin:true,pass,action:"log",actor:_adminName,logAction,detail})
     }, TIMEOUT_MS);
-    // Immediately refresh the log display
     await loadLog();
   } catch {}
 }
@@ -321,11 +290,8 @@ let _clearLogTimer = null;
 async function confirmClearLog() {
   if (!_clearLogConfirmed) {
     _clearLogConfirmed = true;
-    showFeedback("logClearMsg", "Click again to confirm — this permanently clears the log.", "warn");
-    _clearLogTimer = setTimeout(() => {
-      _clearLogConfirmed = false;
-      showFeedback("logClearMsg", "", "");
-    }, 5000);
+    setMsg("reseedMsg","Click Clear Log again to confirm — permanently deletes all log entries.","warn");
+    _clearLogTimer = setTimeout(() => { _clearLogConfirmed = false; setMsg("reseedMsg","",""); }, 5000);
     return;
   }
   clearTimeout(_clearLogTimer);
@@ -333,27 +299,16 @@ async function confirmClearLog() {
   const pass = getPass();
   if (!pass) { alert("Enter password first."); return; }
   try {
-    await fetchWithTimeout(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ admin: true, pass, action: "clearlog" })
-    }, TIMEOUT_MS);
+    await fetchWithTimeout(API, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({admin:true,pass,action:"clearlog"})}, TIMEOUT_MS);
     await loadLog();
   } catch {}
-}
-
-function showFeedback(id, text, type) {
-  let el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = text;
-  el.className = "feedback" + (type ? " " + type : "");
-  el.style.display = text ? "block" : "none";
 }
 
 function getPass(){ return document.getElementById("pass").value.trim(); }
 
 function setMsg(id, text, type){
   const el = document.getElementById(id);
+  if(!el) return;
   el.textContent = text;
   el.className = "feedback" + (type ? " " + type : "");
 }
@@ -368,16 +323,9 @@ function setTag(id, text, type){
 function setConnected(state){
   const dot = document.getElementById("statusDot");
   const lbl = document.getElementById("statusLabel");
-  if(state === "ok"){
-    dot.className = "status-dot ok";
-    lbl.textContent = "Connected";
-  } else if(state === "connecting"){
-    dot.className = "status-dot connecting";
-    lbl.textContent = "Connecting…";
-  } else {
-    dot.className = "status-dot err";
-    lbl.textContent = "Not connected";
-  }
+  if(state === "ok"){ dot.className="status-dot ok"; lbl.textContent="Connected"; }
+  else if(state === "connecting"){ dot.className="status-dot connecting"; lbl.textContent="Connecting…"; }
+  else { dot.className="status-dot err"; lbl.textContent="Not connected"; }
 }
 
 function updateStats(remaining){
@@ -389,25 +337,25 @@ async function fetchWithTimeout(url, options, ms){
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
   try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
+    const res = await fetch(url, {...options, signal:controller.signal});
     clearTimeout(timer);
     return res;
   } catch(e){
     clearTimeout(timer);
-    if(e.name === "AbortError") throw new Error("Request timed out after " + (ms/1000) + "s — API may be down.");
+    if(e.name==="AbortError") throw new Error("Request timed out after "+(ms/1000)+"s — API may be down.");
     throw e;
   }
 }
 
 async function adminPost(action){
   const pass = getPass();
-  if(!pass) return { ok:false, error:"Enter your password first." };
+  if(!pass) return {ok:false,error:"Enter your password first."};
   const res = await fetchWithTimeout(API, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ admin:true, pass, action, actor: _adminName })
+    body:JSON.stringify({admin:true,pass,action,actor:_adminName})
   }, TIMEOUT_MS);
-  if(!res.ok) throw new Error("Server returned " + res.status + " " + res.statusText);
+  if(!res.ok) throw new Error("Server returned "+res.status+" "+res.statusText);
   return res.json();
 }
 
@@ -415,26 +363,27 @@ async function checkStatus(){
   const btn = document.getElementById("checkBtn");
   btn.disabled = true;
   setConnected("connecting");
-  setMsg("loginMsg", "Connecting…", "warn");
-  setTag("loginTag", "Checking", "warn");
+  setMsg("loginMsg","Connecting…","warn");
+  setTag("loginTag","Checking","warn");
   try{
     const data = await adminPost("dump");
     if(!data.ok){
-      setMsg("loginMsg", "Wrong password — access denied.", "err");
-      setTag("loginTag", "Failed", "err");
+      setMsg("loginMsg","Wrong password — access denied.","err");
+      setTag("loginTag","Failed","err");
       setConnected("err");
       return;
     }
     updateStats(data.remaining);
-    setMsg("loginMsg", "Connected. Pool has " + data.remaining + " keys remaining.", "ok");
-    setTag("loginTag", "Connected", "ok");
+    setMsg("loginMsg","Connected. Pool has "+data.remaining+" keys remaining.","ok");
+    setTag("loginTag","Connected","ok");
     setConnected("ok");
-    await remoteLog("check_status", data.remaining + " keys remaining");
+    await remoteLog("check_status", data.remaining+" keys remaining");
+    await loadLog();
     startLogPoll();
   } catch(e){
-    const msg = e.message || "Unknown error";
-    setMsg("loginMsg", "Error: " + msg, "err");
-    setTag("loginTag", "Error", "err");
+    const msg = e.message||"Unknown error";
+    setMsg("loginMsg","Error: "+msg,"err");
+    setTag("loginTag","Error","err");
     setConnected("err");
   } finally {
     btn.disabled = false;
@@ -444,18 +393,18 @@ async function checkStatus(){
 async function dumpKeys(){
   const btn = document.getElementById("dumpBtn");
   btn.disabled = true;
-  setMsg("dumpMsg", "Loading…", "warn");
+  setMsg("dumpMsg","Loading…","warn");
   document.getElementById("keysList").style.display = "none";
   try{
     const data = await adminPost("dump");
-    if(!data.ok){ setMsg("dumpMsg", data.error || "Failed — check your password.", "err"); return; }
+    if(!data.ok){ setMsg("dumpMsg",data.error||"Failed — check your password.","err"); return; }
     _keys = data.keys || [];
     updateStats(data.remaining);
-    setMsg("dumpMsg", _keys.length + " keys loaded. Click a key to copy it individually.");
+    setMsg("dumpMsg",_keys.length+" keys loaded. Click a key to copy it individually.","ok");
     renderKeysList(_keys);
-    await remoteLog("load_keys", _keys.length + " keys available");
+    await remoteLog("load_keys", _keys.length+" keys available");
   } catch(e){
-    setMsg("dumpMsg", "Error: " + (e.message || "Unknown error"), "err");
+    setMsg("dumpMsg","Error: "+(e.message||"Unknown error"),"err");
   } finally {
     btn.disabled = false;
   }
@@ -464,7 +413,6 @@ async function dumpKeys(){
 function renderKeysList(keys) {
   const list = document.getElementById("keysList");
   if (!keys.length) { list.style.display = "none"; return; }
-  // Render each key as a clickable row
   list.style.display = "block";
   list.style.whiteSpace = "normal";
   list.innerHTML = keys.map(k =>
@@ -475,20 +423,20 @@ function renderKeysList(keys) {
 async function copySpecificKey(key) {
   try {
     await navigator.clipboard.writeText(key);
-    setMsg("dumpMsg", "Copied: " + key, "ok");
+    setMsg("dumpMsg","Copied: "+key,"ok");
     await remoteLog("copy_key", key);
   } catch {
-    setMsg("dumpMsg", "Copy failed — try manually.", "err");
+    setMsg("dumpMsg","Copy failed — try manually.","err");
   }
 }
 
 async function copyKeys(){
-  if(!_keys.length){ setMsg("dumpMsg", "Load keys first.", "err"); return; }
+  if(!_keys.length){ setMsg("dumpMsg","Load keys first.","err"); return; }
   navigator.clipboard.writeText(_keys.join("\n")).then(async () => {
-    setMsg("dumpMsg", "Copied all " + _keys.length + " keys to clipboard.", "ok");
-    await remoteLog("copy_all_keys", _keys.length + " keys");
+    setMsg("dumpMsg","Copied all "+_keys.length+" keys to clipboard.","ok");
+    await remoteLog("copy_all_keys", _keys.length+" keys");
   }).catch(() => {
-    setMsg("dumpMsg", "Copy failed — try selecting text manually.", "err");
+    setMsg("dumpMsg","Copy failed — try selecting text manually.","err");
   });
 }
 
@@ -498,11 +446,11 @@ function confirmReseed(){
   if(!_reseedConfirmed){
     _reseedConfirmed = true;
     document.getElementById("reseedBtn").textContent = "Click again to confirm";
-    setMsg("reseedMsg", "Are you sure? This permanently wipes all existing keys.", "warn");
+    setMsg("reseedMsg","Are you sure? This permanently wipes all existing keys.","warn");
     _reseedTimer = setTimeout(() => {
       _reseedConfirmed = false;
       document.getElementById("reseedBtn").textContent = "Reseed pool";
-      setMsg("reseedMsg", "Cancelled.", "");
+      setMsg("reseedMsg","Cancelled.","");
     }, 5000);
     return;
   }
@@ -515,21 +463,21 @@ function confirmReseed(){
 async function doReseed(){
   const btn = document.getElementById("reseedBtn");
   btn.disabled = true;
-  setMsg("reseedMsg", "Reseeding…", "warn");
-  setTag("reseedTag", "Working", "warn");
+  setMsg("reseedMsg","Reseeding…","warn");
+  setTag("reseedTag","Working","warn");
   try{
-    const data = await adminPost("reseed"); // reseed action now logs server-side too
-    if(!data.ok){ setMsg("reseedMsg", data.error || "Failed.", "err"); setTag("reseedTag", "Failed", "err"); return; }
+    const data = await adminPost("reseed");
+    if(!data.ok){ setMsg("reseedMsg",data.error||"Failed.","err"); setTag("reseedTag","Failed","err"); return; }
     updateStats(data.remaining);
-    setMsg("reseedMsg", "Done. Pool reseeded with " + data.remaining + " fresh keys.", "ok");
-    setTag("reseedTag", "Done", "ok");
+    setMsg("reseedMsg","Done. Pool reseeded with "+data.remaining+" fresh keys.","ok");
+    setTag("reseedTag","Done","ok");
     _keys = [];
     document.getElementById("keysList").style.display = "none";
-    setMsg("dumpMsg", "Pool reseeded — click Load keys to see new ones.", "");
-    await loadLog(); // refresh immediately after reseed
+    setMsg("dumpMsg","Pool reseeded — click Load keys to see new ones.","");
+    await loadLog();
   } catch(e){
-    setMsg("reseedMsg", "Error: " + (e.message || "Unknown error"), "err");
-    setTag("reseedTag", "Error", "err");
+    setMsg("reseedMsg","Error: "+(e.message||"Unknown error"),"err");
+    setTag("reseedTag","Error","err");
   } finally {
     btn.disabled = false;
   }
