@@ -1,23 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Norwalk PS</title>
-  
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNOW-WEB — Admin</title>
+  <link rel="icon" type="image/png" href="https://myapps.classlink.com/favicon.ico">
+  <style>
+    :root,
+    [data-theme="lux"] {
+      --bg:#070707;--bg-2:#0c0c0c;--panel:rgba(18,18,18,.86);--panel-2:rgba(255,255,255,.04);--panel-3:rgba(255,255,255,.07);--text:#f6f6f6;--muted:#bdbdbd;--line:rgba(255,255,255,.12);--line-2:rgba(255,255,255,.2);--shadow:0 16px 48px rgba(0,0,0,.4);--accent:#ffffff;--accent-text:#0a0a0a;--body-bg:#070707;--grad-a:rgba(255,255,255,.08);--grad-b:rgba(255,255,255,.06);
+    }
+    [data-theme="arctic"] { --bg:#060d1a;--bg-2:#0a1525;--panel:rgba(8,20,40,.88);--panel-2:rgba(100,180,255,.05);--panel-3:rgba(100,180,255,.09);--text:#dff0ff;--muted:#7aaccf;--line:rgba(100,200,255,.14);--line-2:rgba(100,200,255,.28);--shadow:0 16px 48px rgba(0,20,60,.45);--accent:#5bc8ff;--accent-text:#060d1a;--body-bg:#060d1a;--grad-a:rgba(91,200,255,.1);--grad-b:rgba(91,200,255,.06); }
+    [data-theme="ember"] { --bg:#0f0704;--bg-2:#190d06;--panel:rgba(25,12,6,.9);--panel-2:rgba(255,120,40,.04);--panel-3:rgba(255,120,40,.08);--text:#fff0e8;--muted:#c4856a;--line:rgba(255,120,40,.14);--line-2:rgba(255,120,40,.28);--shadow:0 16px 48px rgba(40,10,0,.45);--accent:#ff6b2b;--accent-text:#0f0704;--body-bg:#0f0704;--grad-a:rgba(255,107,43,.1);--grad-b:rgba(255,107,43,.06); }
+    [data-theme="nova"] { --bg:#0a0614;--bg-2:#110820;--panel:rgba(14,7,28,.9);--panel-2:rgba(160,100,255,.05);--panel-3:rgba(160,100,255,.09);--text:#ede0ff;--muted:#9070c0;--line:rgba(160,100,255,.15);--line-2:rgba(160,100,255,.3);--shadow:0 16px 48px rgba(20,0,50,.45);--accent:#b06cff;--accent-text:#0a0614;--body-bg:#0a0614;--grad-a:rgba(176,108,255,.1);--grad-b:rgba(176,108,255,.06); }
+    [data-theme="lime"] { --bg:#040a04;--bg-2:#081008;--panel:rgba(6,14,6,.9);--panel-2:rgba(80,255,80,.04);--panel-3:rgba(80,255,80,.08);--text:#c8ffb0;--muted:#5a9e50;--line:rgba(80,255,80,.13);--line-2:rgba(80,255,80,.25);--shadow:0 16px 48px rgba(0,20,0,.45);--accent:#6dff4a;--accent-text:#040a04;--body-bg:#040a04;--grad-a:rgba(109,255,74,.1);--grad-b:rgba(109,255,74,.06); }
+    [data-theme="rose"] { --bg:#0f0408;--bg-2:#1a0610;--panel:rgba(20,6,14,.9);--panel-2:rgba(255,80,140,.04);--panel-3:rgba(255,80,140,.08);--text:#ffe0f0;--muted:#c07090;--line:rgba(255,80,140,.14);--line-2:rgba(255,80,140,.28);--shadow:0 16px 48px rgba(60,0,30,.45);--accent:#ff5090;--accent-text:#0f0408;--body-bg:#0f0408;--grad-a:rgba(255,80,144,.1);--grad-b:rgba(255,80,144,.06); }
+    [data-theme="gold"] { --bg:#0b0900;--bg-2:#141100;--panel:rgba(20,17,0,.9);--panel-2:rgba(255,200,40,.04);--panel-3:rgba(255,200,40,.08);--text:#fff8d0;--muted:#c0a040;--line:rgba(255,200,40,.14);--line-2:rgba(255,200,40,.28);--shadow:0 16px 48px rgba(40,30,0,.45);--accent:#ffc820;--accent-text:#0b0900;--body-bg:#0b0900;--grad-a:rgba(255,200,32,.1);--grad-b:rgba(255,200,32,.06); }
+    [data-theme="cyan"] { --bg:#020e0e;--bg-2:#041414;--panel:rgba(4,18,18,.9);--panel-2:rgba(0,255,240,.04);--panel-3:rgba(0,255,240,.08);--text:#d0fff8;--muted:#40a89a;--line:rgba(0,255,240,.12);--line-2:rgba(0,255,240,.24);--shadow:0 16px 48px rgba(0,30,30,.45);--accent:#00fff0;--accent-text:#020e0e;--body-bg:#020e0e;--grad-a:rgba(0,255,240,.1);--grad-b:rgba(0,255,240,.06); }
+    [data-theme="slate"] { --bg:#0a0e14;--bg-2:#0e1420;--panel:rgba(12,18,28,.9);--panel-2:rgba(120,160,220,.04);--panel-3:rgba(120,160,220,.08);--text:#ccd8f0;--muted:#6080a8;--line:rgba(120,160,220,.12);--line-2:rgba(120,160,220,.24);--shadow:0 16px 48px rgba(0,10,30,.45);--accent:#7ab0ff;--accent-text:#0a0e14;--body-bg:#0a0e14;--grad-a:rgba(122,176,255,.1);--grad-b:rgba(122,176,255,.06); }
+    [data-theme="ghost"] { --bg:#f0f0f0;--bg-2:#e8e8e8;--panel:rgba(255,255,255,.85);--panel-2:rgba(0,0,0,.03);--panel-3:rgba(0,0,0,.05);--text:#101010;--muted:#606060;--line:rgba(0,0,0,.1);--line-2:rgba(0,0,0,.18);--shadow:0 16px 48px rgba(0,0,0,.12);--accent:#101010;--accent-text:#f0f0f0;--body-bg:#f0f0f0;--grad-a:rgba(0,0,0,.05);--grad-b:rgba(0,0,0,.03); }
+    [data-theme="midnight"] { --bg:#050816;--bg-2:#0b1024;--panel:rgba(9,14,34,.9);--panel-2:rgba(90,120,255,.05);--panel-3:rgba(90,120,255,.09);--text:#e8ecff;--muted:#93a0d0;--line:rgba(90,120,255,.15);--line-2:rgba(90,120,255,.28);--shadow:0 16px 48px rgba(0,0,20,.45);--accent:#91a7ff;--accent-text:#050816;--body-bg:#050816;--grad-a:rgba(145,167,255,.1);--grad-b:rgba(145,167,255,.06); }
+    [data-theme="aurora"] { --bg:#04120f;--bg-2:#07231b;--panel:rgba(7,26,21,.9);--panel-2:rgba(65,230,170,.05);--panel-3:rgba(65,230,170,.09);--text:#dffdf1;--muted:#7fc8ae;--line:rgba(65,230,170,.14);--line-2:rgba(65,230,170,.28);--shadow:0 16px 48px rgba(0,30,20,.45);--accent:#45f0b0;--accent-text:#04120f;--body-bg:#04120f;--grad-a:rgba(69,240,176,.1);--grad-b:rgba(69,240,176,.06); }
+    [data-theme="cherry"] { --bg:#18040a;--bg-2:#2a0812;--panel:rgba(28,8,15,.92);--panel-2:rgba(255,85,125,.05);--panel-3:rgba(255,85,125,.1);--text:#ffe5ea;--muted:#d08a9a;--line:rgba(255,85,125,.16);--line-2:rgba(255,85,125,.3);--shadow:0 16px 48px rgba(60,0,20,.45);--accent:#ff6f92;--accent-text:#18040a;--body-bg:#18040a;--grad-a:rgba(255,111,146,.1);--grad-b:rgba(255,111,146,.06); }
+    [data-theme="pearl"] { --bg:#f8f6f2;--bg-2:#ece7de;--panel:rgba(255,255,255,.88);--panel-2:rgba(0,0,0,.03);--panel-3:rgba(0,0,0,.05);--text:#161616;--muted:#666;--line:rgba(0,0,0,.1);--line-2:rgba(0,0,0,.18);--shadow:0 16px 48px rgba(0,0,0,.12);--accent:#1b1b1b;--accent-text:#f8f6f2;--body-bg:#f8f6f2;--grad-a:rgba(0,0,0,.04);--grad-b:rgba(0,0,0,.02); }
+    [data-theme="graphite"] { --bg:#0d0f12;--bg-2:#171a1f;--panel:rgba(16,19,24,.92);--panel-2:rgba(255,255,255,.04);--panel-3:rgba(255,255,255,.07);--text:#edf0f5;--muted:#9aa3ad;--line:rgba(255,255,255,.12);--line-2:rgba(255,255,255,.2);--shadow:0 16px 48px rgba(0,0,0,.45);--accent:#f5f7fa;--accent-text:#0d0f12;--body-bg:#0d0f12;--grad-a:rgba(255,255,255,.06);--grad-b:rgba(255,255,255,.04); }
 
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body{
+      margin:0; padding:0; min-height:100%;
+      background:var(--body-bg); color:var(--text);
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
+      transition:background-color .25s ease,color .2s ease;
+    }
+    a{ color:inherit; text-decoration:none; }
+    button,input{ font:inherit; }
+
+    .noise{
+      position:fixed; inset:0; pointer-events:none; opacity:.025;
+      background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+      background-size:32px 32px; mix-blend-mode:screen; z-index:0; contain:strict;
+    }
+
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+      background:rgba(6,6,6,.75); border-bottom:1px solid var(--line);
+    }
+    .topbar .inner{
+      width:min(1200px,calc(100% - 32px)); margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;
+    }
+    .brand{ display:flex; flex-direction:column; line-height:1; gap:4px; }
+    .brand .title{ font-weight:900; letter-spacing:.22em; font-size:17px; text-transform:uppercase; }
+    .brand .sub{ color:var(--muted); font-size:11px; letter-spacing:.18em; text-transform:uppercase; }
+    .topbar-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+    /* Status dot */
+    .status-dot{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.15); flex-shrink:0; transition:background .3s; }
+    .status-dot.ok{ background:#34d399; }
+    .status-dot.err{ background:#ef4444; }
+    .status-dot.connecting{ background:#fbbf24; animation:pulse 1s infinite; }
+    @keyframes pulse{ 0%,100%{opacity:1}50%{opacity:.35} }
+
+    /* Theme picker */
+    .theme-wrap{ position:relative; display:inline-flex; align-items:center; }
+    .theme-btn{
+      display:inline-flex; align-items:center; gap:6px;
+      border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text);
+      min-height:40px; padding:0 13px; border-radius:999px; cursor:pointer;
+      transition:border-color .15s,background .15s,transform .15s; font-size:13px; font-weight:600;
+    }
+    .theme-btn:hover{ border-color:var(--line-2); background:rgba(255,255,255,.07); transform:translateY(-1px); }
+    .theme-dropdown{
+      position:absolute; top:calc(100% + 6px); right:0; min-width:200px;
+      border:1px solid var(--line-2); border-radius:16px;
+      background:rgba(10,10,10,.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      box-shadow:0 16px 48px rgba(0,0,0,.55); padding:6px; z-index:100;
+      opacity:0; pointer-events:none; transform:translateY(-4px) scale(.98);
+      transition:opacity .15s ease,transform .15s ease;
+    }
+    .theme-dropdown.open{ opacity:1; pointer-events:auto; transform:translateY(0) scale(1); }
+    .dd-label{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); padding:6px 10px 4px; }
+    .dd-scroll{ max-height:280px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.1) transparent; }
+    .theme-option{
+      width:100%; display:flex; align-items:center; gap:9px; padding:8px 10px;
+      border-radius:10px; border:none; background:transparent; color:var(--text);
+      cursor:pointer; font-size:13px; font-weight:600; transition:background .12s; text-align:left;
+    }
+    .theme-option:hover{ background:rgba(255,255,255,.07); }
+    .theme-option.active{ background:rgba(255,255,255,.1); color:#fff; }
+    .theme-swatch{ width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,.2); flex-shrink:0; }
+    .theme-option .check{ margin-left:auto; font-size:12px; opacity:0; }
+    .theme-option.active .check{ opacity:1; }
+
+    /* Wrap */
+    .wrap{ width:min(900px,calc(100% - 32px)); margin:0 auto; padding:28px 0 60px; position:relative; z-index:1; }
+
+    /* Eyebrow */
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:6px; padding:6px 12px;
+      border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.03);
+      color:var(--muted); font-size:11px; letter-spacing:.18em; text-transform:uppercase; margin-bottom:20px;
+    }
+
+    /* Metrics */
+    .metrics{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:24px; }
+    .metric{ border:1px solid var(--line); border-radius:16px; background:var(--panel-2); padding:16px 18px; }
+    .metric-val{ font-size:30px; font-weight:900; letter-spacing:-.04em; line-height:1; }
+    .metric-label{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-top:6px; }
+
+    /* Cards */
+    .card{
+      background:var(--panel); border:1px solid var(--line);
+      border-radius:20px; padding:22px; margin-bottom:14px;
+    }
+    .card-danger{ border-color:rgba(239,68,68,.3); }
+    .card-title{ font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    .card-desc{ font-size:13px; color:rgba(189,189,189,.7); margin-bottom:16px; line-height:1.6; }
+
+    /* Buttons */
+    .pill{
+      min-height:40px; padding:0 18px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--text);
+      cursor:pointer; font-size:13px; font-weight:700; letter-spacing:.03em;
+      display:inline-flex; align-items:center; gap:7px;
+      transition:background .15s,border-color .15s,transform .15s;
+    }
+    .pill:hover{ background:rgba(255,255,255,.1); border-color:var(--line-2); transform:translateY(-1px); }
+    .pill:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+    .pill.primary{ background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+    .pill.primary:hover{ opacity:.88; }
+    .pill.danger{ background:rgba(239,68,68,.1); border-color:rgba(239,68,68,.28); color:#fca5a5; }
+    .pill.danger:hover{ background:rgba(239,68,68,.18); }
+
+    /* Badges */
+    .badge{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:999px; }
+    .badge-ok{ background:rgba(52,211,153,.12); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+    .badge-err{ background:rgba(239,68,68,.12); color:#f87171; border:1px solid rgba(239,68,68,.2); }
+    .badge-warn{ background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+
+    /* Feedback */
+    .feedback{
+      font-size:13px; padding:10px 14px; border-radius:12px; margin-top:12px;
+      border:1px solid var(--line); color:var(--muted); line-height:1.5; background:rgba(255,255,255,.03);
+    }
+    .feedback.ok{ border-color:rgba(52,211,153,.25); color:#34d399; background:rgba(52,211,153,.06); }
+    .feedback.err{ border-color:rgba(239,68,68,.25); color:#f87171; background:rgba(239,68,68,.06); }
+    .feedback.warn{ border-color:rgba(251,191,36,.25); color:#fbbf24; background:rgba(251,191,36,.06); }
+
+    /* Keys box */
+    .keys-box{
+      font-family:ui-monospace,monospace; font-size:11px;
+      background:rgba(255,255,255,.03); border-radius:12px; padding:12px 14px;
+      max-height:200px; overflow-y:auto; margin-top:12px;
+      border:1px solid var(--line); line-height:1.9; color:var(--muted);
+      scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.1) transparent;
+    }
+
+    /* Inputs */
+    input[type=password],input[type=text]{
+      width:100%; min-height:44px; border-radius:12px;
+      border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text);
+      padding:0 14px; outline:none; font-size:14px; font-family:inherit;
+      transition:border-color .15s; margin-bottom:12px;
+    }
+    input:focus{ border-color:var(--line-2); }
+    ::placeholder{ color:rgba(189,189,189,.4); }
+
+    /* Row */
+    .row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+    /* Danger note */
+    .danger-note{ font-size:12px; color:rgba(248,113,113,.7); margin-bottom:14px; line-height:1.6; }
+
+    /* Log */
+    .log-entry{ font-size:12px; padding:7px 0; border-bottom:1px solid var(--line); color:var(--muted); line-height:1.5; }
+    .log-entry:last-child{ border-bottom:none; }
+    .log-entry .actor{ color:var(--text); font-weight:700; }
+    .log-entry .ts{ color:rgba(189,189,189,.45); font-size:11px; }
+
+    /* Clickable key rows */
+    .key-row{
+      font-family:ui-monospace,monospace; font-size:11px; padding:4px 6px;
+      border-radius:6px; cursor:pointer; transition:background .12s,color .12s;
+      line-height:1.9; color:var(--muted);
+    }
+    .key-row:hover{ background:rgba(255,255,255,.08); color:var(--text); }
+
+    /* Admin name badge */
+    .admin-name-badge{
+      display:inline-flex; align-items:center; gap:6px; padding:5px 12px;
+      border-radius:999px; background:rgba(255,255,255,.05); border:1px solid var(--line);
+      font-size:12px; color:var(--text); font-weight:700;
+    }
+
+    /* Name Gate */
+    .name-gate{
+      position:fixed; inset:0; z-index:300; display:flex; align-items:center; justify-content:center;
+      padding:16px; background:rgba(0,0,0,.96); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    }
+    .name-gate-card{
+      width:min(420px,100%); border:1px solid var(--line-2); border-radius:24px;
+      background:rgba(12,12,12,.98); box-shadow:0 24px 80px rgba(0,0,0,.7);
+      padding:30px 28px 24px; text-align:center;
+    }
+    .name-gate-logo{ font-size:34px; margin-bottom:14px; }
+    .name-gate-title{ font-size:22px; font-weight:900; letter-spacing:-.03em; margin:0 0 8px; }
+    .name-gate-sub{ color:var(--muted); font-size:14px; line-height:1.6; margin:0 0 20px; }
+    .name-gate-input{
+      width:100%; min-height:50px; border-radius:14px; border:1px solid var(--line-2);
+      background:rgba(255,255,255,.04); color:var(--text); padding:0 16px; outline:none;
+      font-size:16px; font-family:inherit; transition:border-color .15s; text-align:center; margin-bottom:10px;
+    }
+    .name-gate-input:focus{ border-color:rgba(255,255,255,.38); }
+    .name-gate-hint{ font-size:12px; color:var(--muted); margin-bottom:16px; min-height:18px; }
+    .name-gate-hint.err{ color:#f87171; }
+    .name-gate-btn{
+      width:100%; min-height:48px; border-radius:14px; border:1px solid var(--line-2);
+      background:var(--accent); color:var(--accent-text); font-size:15px; font-weight:800;
+      cursor:pointer; transition:opacity .15s,transform .15s;
+    }
+    .name-gate-btn:hover{ opacity:.9; transform:translateY(-1px); }
+
+    /* DevTools block */
+    .devtools-block{
+      position:fixed; inset:0; z-index:999; display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.97); backdrop-filter:blur(20px);
+    }
+    .devtools-block.show{ display:flex; }
+    .devtools-msg{ text-align:center; padding:40px; }
+    .devtools-msg h2{ font-size:26px; margin:0 0 10px; font-weight:900; letter-spacing:-.03em; }
+    .devtools-msg p{ color:var(--muted); line-height:1.7; margin:0; font-size:14px; }
+
+    /* Footer */
+    .footer{
+      position:relative; z-index:1; border-top:1px solid var(--line);
+      padding:16px 0 28px; color:var(--muted); text-align:center;
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    }
+
+    /* Toast */
+    .toast{
+      position:fixed; left:50%; bottom:20px; transform:translateX(-50%);
+      z-index:90; padding:10px 18px; border:1px solid var(--line-2); border-radius:999px;
+      background:rgba(10,10,10,.96); color:var(--text); box-shadow:var(--shadow);
+      max-width:min(92vw,480px); text-align:center; font-size:13px;
+      opacity:0; pointer-events:none; transition:opacity .2s ease;
+    }
+    .toast.show{ opacity:1; pointer-events:auto; }
+
+    @media(max-width:640px){
+      .metrics{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .topbar .inner{ flex-direction:column; align-items:flex-start; }
+      .topbar-right{ justify-content:flex-start; }
+    }
+  </style>
+</head>
 <body>
-<div id="devtoolsBlock" style="
-position:fixed;
-inset:0;
-background:black;
-color:white;
-display:none;
-align-items:center;
-justify-content:center;
-z-index:9999;
-font-family:sans-serif;
-text-align:center;">
-  <div>
+
+<div class="noise"></div>
+
+<!-- DevTools block -->
+<div class="devtools-block" id="devtoolsBlock">
+  <div class="devtools-msg">
     <h2>Close DevTools</h2>
-    <p>You cannot use this panel with devtools open.</p>
+    <p>Developer tools must be closed to use this panel.<br>Close them and the page will resume automatically.</p>
   </div>
 </div>
 
@@ -33,164 +282,189 @@ text-align:center;">
   </div>
 </div>
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#070707;color:#f6f6f6;min-height:100vh;}
-.topbar{background:rgba(6,6,6,.92);border-bottom:1px solid rgba(255,255,255,.1);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
-.brand-title{font-weight:900;letter-spacing:.22em;font-size:15px;text-transform:uppercase;}
-.brand-sub{color:#bdbdbd;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-top:3px;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0;transition:background .3s;}
-.status-dot.ok{background:#34d399;}
-.status-dot.err{background:#ef4444;}
-.status-dot.connecting{background:#fbbf24;animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.wrap{padding:24px;max-width:900px;margin:0 auto;}
-.eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.03);color:#bdbdbd;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px;}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:24px;}
-.metric{border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.04);padding:16px 18px;}
-.metric-val{font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1;}
-.metric-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#bdbdbd;margin-top:6px;}
-.card{background:rgba(18,18,18,.86);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;margin-bottom:14px;}
-.card-danger{border-color:rgba(239,68,68,.3);}
-.card-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#bdbdbd;margin-bottom:4px;}
-.card-desc{font-size:13px;color:rgba(189,189,189,.7);margin-bottom:16px;line-height:1.6;}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.pill{min-height:40px;padding:0 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#f6f6f6;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s,transform .15s;}
-.pill:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);transform:translateY(-1px);}
-.pill:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-.pill.primary{background:#fff;color:#0a0a0a;border-color:#fff;}
-.pill.primary:hover{background:rgba(255,255,255,.88);}
-.pill.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#fca5a5;}
-.pill.danger:hover{background:rgba(239,68,68,.2);}
-.badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px;}
-.badge-ok{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.2);}
-.badge-err{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.2);}
-.badge-warn{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2);}
-.feedback{font-size:13px;padding:10px 14px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,.08);color:#bdbdbd;line-height:1.5;background:rgba(255,255,255,.03);}
-.feedback.ok{border-color:rgba(52,211,153,.25);color:#34d399;background:rgba(52,211,153,.06);}
-.feedback.err{border-color:rgba(239,68,68,.25);color:#f87171;background:rgba(239,68,68,.06);}
-.feedback.warn{border-color:rgba(251,191,36,.25);color:#fbbf24;background:rgba(251,191,36,.06);}
-.keys-box{font-family:ui-monospace,monospace;font-size:11px;background:rgba(255,255,255,.03);border-radius:12px;padding:12px 14px;max-height:180px;overflow-y:auto;margin-top:12px;border:1px solid rgba(255,255,255,.08);white-space:pre;line-height:1.9;color:#bdbdbd;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;}
-.danger-note{font-size:12px;color:rgba(248,113,113,.7);margin-bottom:14px;line-height:1.6;}
-input[type=password],input[type=text]{width:100%;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#f6f6f6;padding:0 14px;outline:none;font-size:14px;font-family:inherit;transition:border-color .15s;margin-bottom:12px;}
-input:focus{border-color:rgba(255,255,255,.28);}
-::placeholder{color:rgba(189,189,189,.45);}
-
-/* Name Gate */
-.name-gate{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.96);backdrop-filter:blur(20px);}
-.name-gate-card{width:min(400px,100%);border:1px solid rgba(255,255,255,.15);border-radius:22px;background:rgba(12,12,12,.98);box-shadow:0 24px 80px rgba(0,0,0,.7);padding:28px 26px 22px;text-align:center;}
-.name-gate-logo{font-size:32px;margin-bottom:12px;}
-.name-gate-title{font-size:20px;font-weight:900;letter-spacing:-.03em;margin:0 0 8px;}
-.name-gate-sub{color:#bdbdbd;font-size:13px;line-height:1.6;margin:0 0 18px;}
-.name-gate-input{width:100%;min-height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#f6f6f6;padding:0 14px;outline:none;font-size:15px;font-family:inherit;text-align:center;transition:border-color .15s;margin-bottom:10px;}
-.name-gate-input:focus{border-color:rgba(255,255,255,.38);}
-.name-gate-hint{font-size:12px;color:#bdbdbd;margin-bottom:14px;min-height:16px;}
-.name-gate-hint.err{color:#f87171;}
-.name-gate-btn{width:100%;min-height:46px;border-radius:12px;border:1px solid #fff;background:#fff;color:#0a0a0a;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s,transform .15s;}
-.name-gate-btn:hover{opacity:.88;transform:translateY(-1px);}
-
-/* Admin name badge */
-.admin-name-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:12px;color:#f6f6f6;font-weight:700;}
-
-/* Log entries */
-.log-entry{font-size:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);color:#bdbdbd;line-height:1.5;}
-.log-entry:last-child{border-bottom:none;}
-.log-entry .actor{color:#f6f6f6;font-weight:700;}
-.log-entry .ts{color:rgba(189,189,189,.5);font-size:11px;}
-
-/* Clickable key rows */
-.key-row{font-family:ui-monospace,monospace;font-size:11px;padding:4px 6px;border-radius:6px;cursor:pointer;transition:background .12s,color .12s;line-height:1.9;color:#bdbdbd;}
-.key-row:hover{background:rgba(255,255,255,.08);color:#f6f6f6;}
-</style>
-
-<div style="background:#070707;min-height:600px;border-radius:16px;overflow:hidden;">
-  <div class="topbar">
-    <div>
-      <div class="brand-title">SNOW-WEB</div>
-      <div class="brand-sub">Admin Panel</div>
+<!-- Topbar -->
+<header class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <div class="title">SNOW-WEB</div>
+      <div class="sub">Admin Panel</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div id="adminNameBadge" style="display:none;" class="admin-name-badge">👤 <span id="adminNameDisplay"></span></div>
+    <div class="topbar-right">
+      <div id="adminNameBadge" style="display:none" class="admin-name-badge">👤 <span id="adminNameDisplay"></span></div>
+      <div class="theme-wrap" id="themeWrap">
+        <button class="theme-btn" type="button" onclick="toggleThemeDropdown(event)">
+          <span>✎</span>
+          <span id="themeLabelDisplay">Lux</span>
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor" style="opacity:.5"><path d="M1 3l4 4 4-4"/></svg>
+        </button>
+        <div class="theme-dropdown" id="themeDropdown">
+          <div class="dd-label">Choose Theme</div>
+          <div class="dd-scroll" id="themeOptions"></div>
+        </div>
+      </div>
       <div class="status-dot" id="statusDot"></div>
-      <span id="statusLabel" style="font-size:12px;color:#bdbdbd;letter-spacing:.06em;">Not connected</span>
+      <span id="statusLabel" style="font-size:12px;color:var(--muted);letter-spacing:.06em">Not connected</span>
     </div>
   </div>
+</header>
 
-  <div class="wrap">
-    <div class="eyebrow">
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="currentColor" stroke-width="1"/><path d="M5 3v2.5l1.5 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-      Key Pool Manager
+<main class="wrap">
+  <div class="eyebrow">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="currentColor" stroke-width="1"/><path d="M5 3v2.5l1.5 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+    Key Pool Manager
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric"><div class="metric-val" id="statRemaining">—</div><div class="metric-label">Keys remaining</div></div>
+    <div class="metric"><div class="metric-val">1,000</div><div class="metric-label">Pool size</div></div>
+    <div class="metric"><div class="metric-val" id="statUsed">—</div><div class="metric-label">Keys used</div></div>
+  </div>
+
+  <!-- Auth card -->
+  <div class="card">
+    <div class="card-title">Authentication</div>
+    <div class="card-desc">Enter your <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:6px">Owner Password</code> to connect.</div>
+    <input type="password" id="pass" placeholder="Owner password…" />
+    <div class="row">
+      <button class="pill primary" id="checkBtn" type="button" onclick="checkStatus()">Check status</button>
+      <span id="loginTag"></span>
     </div>
+    <div class="feedback" id="loginMsg">Enter your password and click "Check status" to begin.</div>
+  </div>
 
-    <div class="metrics">
-      <div class="metric"><div class="metric-val" id="statRemaining">—</div><div class="metric-label">Keys remaining</div></div>
-      <div class="metric"><div class="metric-val">1,000</div><div class="metric-label">Pool size</div></div>
-      <div class="metric"><div class="metric-val" id="statUsed">—</div><div class="metric-label">Keys used</div></div>
+  <!-- Key Pool card -->
+  <div class="card">
+    <div class="card-title">Key Pool</div>
+    <div class="card-desc">Dump all unredeemed keys — click any key to copy it individually.</div>
+    <div class="row">
+      <button class="pill" type="button" id="dumpBtn" onclick="dumpKeys()">Load keys</button>
+      <button class="pill" type="button" onclick="copyKeys()">Copy all</button>
     </div>
+    <div class="feedback" id="dumpMsg">Click "Load keys" to see available keys.</div>
+    <div class="keys-box" id="keysList" style="display:none;white-space:normal"></div>
+  </div>
 
-    <div class="card">
-      <div class="card-title">Authentication</div>
-      <div class="card-desc">Enter your <code style="font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;">Owner Password</code> from your secret website</div>
-      <input type="password" id="pass" placeholder="Your owner password here" />
-      <div class="row">
-        <button class="pill primary" id="checkBtn" onclick="checkStatus()">Check status</button>
-        <span id="loginTag"></span>
-      </div>
-      <div class="feedback" id="loginMsg">Enter your password and click "Check status" to begin.</div>
+  <!-- Danger zone -->
+  <div class="card card-danger">
+    <div class="card-title" style="color:rgba(248,113,113,.8)">Danger Zone</div>
+    <div class="danger-note">Wipes all 1,000 keys and generates a fresh set. Old keys immediately stop working. Cannot be undone.</div>
+    <div class="row">
+      <button class="pill danger" type="button" id="reseedBtn" onclick="confirmReseed()">Reseed pool</button>
+      <span id="reseedTag"></span>
     </div>
+    <div class="feedback" id="reseedMsg">Ready.</div>
+  </div>
 
-    <div class="card">
-      <div class="card-title">Key Pool</div>
-      <div class="card-desc">Dump all unredeemed keys or copy and give to people who paid.</div>
-      <div class="row">
-        <button class="pill" id="dumpBtn" onclick="dumpKeys()">Load keys</button>
-        <button class="pill" onclick="copyKeys()">Copy all</button>
-      </div>
-      <div class="feedback" id="dumpMsg">Click "Load keys" to see available keys.</div>
-      <div class="keys-box" id="keysList" style="display:none"></div>
+  <!-- Activity Log -->
+  <div class="card">
+    <div class="card-title">Activity Log</div>
+    <div class="card-desc">Persistent log of all actions across all admins and users — survives refreshes and visible on every device.</div>
+    <div class="row" style="margin-bottom:8px">
+      <button class="pill" type="button" onclick="loadLog()">↻ Refresh</button>
+      <button class="pill danger" type="button" onclick="confirmClearLog()">Clear Log</button>
+      <span id="logLiveTag" class="badge badge-ok" style="display:none">● Live</span>
     </div>
-
-    <div class="card card-danger">
-      <div class="card-title" style="color:rgba(248,113,113,.8);">Danger Zone</div>
-      <div class="danger-note">Wipes all keys and generates 1,000 new ones. Old keys will stop working and this cannot be undone.</div>
-      <div class="row">
-        <button class="pill danger" onclick="confirmReseed()" id="reseedBtn">Reseed pool</button>
-        <span id="reseedTag"></span>
-      </div>
-      <div class="feedback" id="reseedMsg">Ready.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Activity Log</div>
-      <div class="card-desc">Persistent log of all actions across all admins and users — survives refreshes and shows on every device.</div>
-      <div class="row" style="margin-bottom:8px;">
-        <button class="pill" onclick="loadLog()">↻ Refresh Log</button>
-        <button class="pill danger" onclick="confirmClearLog()">Clear Log</button>
-        <span id="logLiveTag" class="badge badge-ok" style="display:none;">● Live</span>
-      </div>
-      <div class="keys-box" id="activityLog" style="display:block;min-height:80px;white-space:normal;">Loading log…</div>
+    <div class="keys-box" id="activityLog" style="max-height:260px;white-space:normal;display:block;min-height:80px">
+      <span style="color:rgba(189,189,189,.4);font-size:12px">Connect to view the log.</span>
     </div>
   </div>
-</div>
+</main>
+
+<footer class="footer wrap">SNOW-WEB Admin</footer>
+
+<div class="toast" id="toast"></div>
 
 <script>
 const API = "https://snow-api.garypaytonpg.workers.dev/api/snow";
 const TIMEOUT_MS = 10000;
 const ADMIN_NAME_KEY = "snow_admin_name_v1";
+const THEME_KEY = "snow_theme_v1";
+
 let _keys = [];
 let _adminName = "";
 let _logPollInterval = null;
+let _currentTheme = localStorage.getItem(THEME_KEY) || "lux";
 
-function getAdminName() {
-  return localStorage.getItem(ADMIN_NAME_KEY) || "";
+/* ── Themes ── */
+const THEMES = [
+  { id:"lux",      label:"Lux",      swatch:"#f6f6f6", desc:"Black, white, glass." },
+  { id:"arctic",   label:"Arctic",   swatch:"#5bc8ff", desc:"Icy blue dark." },
+  { id:"ember",    label:"Ember",    swatch:"#ff6b2b", desc:"Warm dark red-orange." },
+  { id:"nova",     label:"Nova",     swatch:"#b06cff", desc:"Deep purple dark." },
+  { id:"lime",     label:"Lime",     swatch:"#6dff4a", desc:"Hacker green." },
+  { id:"rose",     label:"Rose",     swatch:"#ff5090", desc:"Hot pink dark." },
+  { id:"gold",     label:"Gold",     swatch:"#ffc820", desc:"Rich dark gold." },
+  { id:"cyan",     label:"Cyan",     swatch:"#00fff0", desc:"Neon teal dark." },
+  { id:"slate",    label:"Slate",    swatch:"#7ab0ff", desc:"Cool steel blue." },
+  { id:"ghost",    label:"Ghost",    swatch:"#e0e0e0", desc:"Light mode classic." },
+  { id:"midnight", label:"Midnight", swatch:"#91a7ff", desc:"Deep blue night." },
+  { id:"aurora",   label:"Aurora",   swatch:"#45f0b0", desc:"Fresh neon green." },
+  { id:"cherry",   label:"Cherry",   swatch:"#ff6f92", desc:"Soft red-pink glow." },
+  { id:"pearl",    label:"Pearl",    swatch:"#f8f6f2", desc:"Clean bright mode." },
+  { id:"graphite", label:"Graphite", swatch:"#edf0f5", desc:"Smooth dark gray." },
+];
+
+function applyTheme(id) {
+  const t = THEMES.find(x => x.id === id) || THEMES[0];
+  document.documentElement.setAttribute("data-theme", t.id);
+  _currentTheme = t.id;
+  localStorage.setItem(THEME_KEY, t.id);
+  const lbl = document.getElementById("themeLabelDisplay");
+  if (lbl) lbl.textContent = t.label;
+  document.querySelectorAll(".theme-option").forEach(el => el.classList.toggle("active", el.dataset.tid === t.id));
 }
 
+function buildThemeDropdown() {
+  const container = document.getElementById("themeOptions");
+  if (!container) return;
+  const frag = document.createDocumentFragment();
+  THEMES.forEach(t => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "theme-option" + (t.id === _currentTheme ? " active" : "");
+    btn.dataset.tid = t.id;
+    btn.innerHTML = `<span class="theme-swatch" style="background:${t.swatch}"></span>${t.label}<span class="check">✓</span>`;
+    btn.addEventListener("click", () => { applyTheme(t.id); closeThemeDropdown(); showToast("Theme: " + t.label); });
+    frag.appendChild(btn);
+  });
+  container.appendChild(frag);
+}
+
+function toggleThemeDropdown(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  document.getElementById("themeDropdown")?.classList.toggle("open");
+}
+function closeThemeDropdown() { document.getElementById("themeDropdown")?.classList.remove("open"); }
+document.addEventListener("click", e => { if (!document.getElementById("themeWrap")?.contains(e.target)) closeThemeDropdown(); });
+
+/* ── DevTools block ── */
+(function(){
+  const blocker = document.getElementById("devtoolsBlock");
+  const THRESH = 160;
+  let blocked = false;
+  function check() {
+    if (document.hidden) return;
+    const open = (window.outerWidth - window.innerWidth) > THRESH || (window.outerHeight - window.innerHeight) > THRESH;
+    if (open !== blocked) { blocked = open; blocker.classList.toggle("show", blocked); }
+  }
+  setInterval(check, 1200);
+  window.addEventListener("resize", check, { passive: true });
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("keydown", e => {
+    if (e.key === "F12" || (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) || (e.ctrlKey && e.key === "U") || (e.metaKey && e.altKey && e.key === "I")) {
+      e.preventDefault(); e.stopPropagation();
+    }
+  }, true);
+})();
+
+/* ── Name Gate ── */
 function submitAdminNameGate() {
   const input = document.getElementById("nameGateInput");
   const hint  = document.getElementById("nameGateHint");
   const raw   = (input?.value || "").trim();
-  if (raw.length < 3) { hint.textContent = "Name must be at least 3 characters."; hint.className = "name-gate-hint err"; input.focus(); return; }
-  if (raw.length > 20) { hint.textContent = "Name can be at most 20 characters."; hint.className = "name-gate-hint err"; input.focus(); return; }
+  if (raw.length < 3)  { hint.textContent = "At least 3 characters."; hint.className = "name-gate-hint err"; input.focus(); return; }
+  if (raw.length > 20) { hint.textContent = "Max 20 characters."; hint.className = "name-gate-hint err"; input.focus(); return; }
   if (!/^[a-zA-Z'-]+$/.test(raw)) { hint.textContent = "Letters only please."; hint.className = "name-gate-hint err"; input.focus(); return; }
   const name = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
   localStorage.setItem(ADMIN_NAME_KEY, name);
@@ -201,7 +475,7 @@ function submitAdminNameGate() {
 }
 
 function initAdminNameGate() {
-  const saved = getAdminName();
+  const saved = localStorage.getItem(ADMIN_NAME_KEY) || "";
   if (saved) {
     _adminName = saved;
     document.getElementById("nameGate").style.display = "none";
@@ -209,45 +483,111 @@ function initAdminNameGate() {
     document.getElementById("adminNameDisplay").textContent = saved;
     return;
   }
-  document.getElementById("nameGateInput").addEventListener("keydown", e => {
-    if (e.key === "Enter") submitAdminNameGate();
-  });
+  document.getElementById("nameGateInput").addEventListener("keydown", e => { if (e.key === "Enter") submitAdminNameGate(); });
   setTimeout(() => document.getElementById("nameGateInput")?.focus(), 80);
 }
 
-function escLog(s) {
+/* ── Helpers ── */
+function escHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
+function setMsg(id, text, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = "feedback" + (type ? " " + type : "");
+}
+
+function setTag(id, text, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = "badge badge-" + type;
+}
+
+function setConnected(state) {
+  const dot = document.getElementById("statusDot");
+  const lbl = document.getElementById("statusLabel");
+  if (state === "ok")         { dot.className = "status-dot ok";         lbl.textContent = "Connected"; }
+  else if (state === "connecting") { dot.className = "status-dot connecting"; lbl.textContent = "Connecting…"; }
+  else                        { dot.className = "status-dot err";        lbl.textContent = "Not connected"; }
+}
+
+function updateStats(remaining) {
+  document.getElementById("statRemaining").textContent = Number(remaining).toLocaleString();
+  document.getElementById("statUsed").textContent = (1000 - Number(remaining)).toLocaleString();
+}
+
+let _toastTimer = null;
+function showToast(msg, dur = 2400) {
+  const t = document.getElementById("toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove("show"), dur);
+}
+
+async function fetchWithTimeout(url, options, ms) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const res = await fetch(url, { ...options, signal: ctrl.signal });
+    clearTimeout(timer);
+    return res;
+  } catch(e) {
+    clearTimeout(timer);
+    if (e.name === "AbortError") throw new Error("Request timed out after " + (ms/1000) + "s.");
+    throw e;
+  }
+}
+
+function getPass() { return document.getElementById("pass").value.trim(); }
+
+async function adminPost(action, extras = {}) {
+  const pass = getPass();
+  if (!pass) return { ok: false, error: "Enter your password first." };
+  const res = await fetchWithTimeout(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ admin: true, pass, action, actor: _adminName, ...extras }),
+  }, TIMEOUT_MS);
+  if (!res.ok) throw new Error("Server returned " + res.status + " " + res.statusText);
+  return res.json();
+}
+
+/* ── Log ── */
 function actionLabel(action) {
   const map = {
-    "check_status":"checked status","load_keys":"loaded key pool",
-    "copy_all_keys":"copied ALL keys to clipboard","copy_key":"copied key",
-    "reseed":"reseeded the pool","redeemed_key":"redeemed key","reseed_cancel":"cancelled reseed"
+    check_status:"checked status", load_keys:"loaded key pool",
+    copy_all_keys:"copied ALL keys", copy_key:"copied key",
+    reseed:"reseeded the pool", redeemed_key:"redeemed key",
+    reseed_cancel:"cancelled reseed",
   };
   return map[action] || action;
 }
 
 function actionColor(action) {
-  if (action === "reseed") return "#f87171";
-  if (action === "redeemed_key") return "#34d399";
+  if (action === "reseed")                       return "#f87171";
+  if (action === "redeemed_key")                 return "#34d399";
   if (action === "copy_key" || action === "copy_all_keys") return "#fbbf24";
-  return "#bdbdbd";
+  return "var(--muted)";
 }
 
 function renderLog(entries) {
   const box = document.getElementById("activityLog");
   if (!entries || !entries.length) {
-    box.innerHTML = '<span style="color:rgba(189,189,189,.4);font-size:12px;">No activity yet.</span>';
+    box.innerHTML = '<span style="color:rgba(189,189,189,.4);font-size:12px">No activity yet.</span>';
     return;
   }
   const sorted = [...entries].reverse();
   box.innerHTML = sorted.map(e => {
-    const ts  = new Date(e.ts).toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"});
-    const lbl = escLog(actionLabel(e.action));
+    const ts  = new Date(e.ts).toLocaleString([], { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit", second:"2-digit" });
+    const lbl = escHtml(actionLabel(e.action));
     const col = actionColor(e.action);
-    const det = e.detail ? ` <span style="color:rgba(189,189,189,.6);font-size:10px;font-family:ui-monospace,monospace;">${escLog(e.detail)}</span>` : "";
-    return `<div class="log-entry"><span class="actor">${escLog(e.actor)}</span> <span style="color:${col}">${lbl}</span>${det} <span class="ts">${ts}</span></div>`;
+    const det = e.detail ? ` <span style="color:rgba(189,189,189,.55);font-size:10px;font-family:ui-monospace,monospace">${escHtml(e.detail)}</span>` : "";
+    return `<div class="log-entry"><span class="actor">${escHtml(e.actor)}</span> <span style="color:${col}">${lbl}</span>${det} <span class="ts">${ts}</span></div>`;
   }).join("");
   box.scrollTop = 0;
 }
@@ -257,9 +597,9 @@ async function loadLog() {
   if (!pass) return;
   try {
     const res = await fetchWithTimeout(API, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({admin:true,pass,action:"getlog"})
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ admin: true, pass, action: "getlog" }),
     }, TIMEOUT_MS);
     const data = await res.json();
     if (data.ok) renderLog(data.entries || []);
@@ -277,134 +617,61 @@ async function remoteLog(logAction, detail = "") {
   if (!pass) return;
   try {
     await fetchWithTimeout(API, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({admin:true,pass,action:"log",actor:_adminName,logAction,detail})
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ admin: true, pass, action: "log", actor: _adminName, logAction, detail }),
     }, TIMEOUT_MS);
     await loadLog();
   } catch {}
 }
 
-let _clearLogConfirmed = false;
-let _clearLogTimer = null;
-async function confirmClearLog() {
-  if (!_clearLogConfirmed) {
-    _clearLogConfirmed = true;
-    setMsg("reseedMsg","Click Clear Log again to confirm — permanently deletes all log entries.","warn");
-    _clearLogTimer = setTimeout(() => { _clearLogConfirmed = false; setMsg("reseedMsg","",""); }, 5000);
-    return;
-  }
-  clearTimeout(_clearLogTimer);
-  _clearLogConfirmed = false;
-  const pass = getPass();
-  if (!pass) { alert("Enter password first."); return; }
-  try {
-    await fetchWithTimeout(API, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({admin:true,pass,action:"clearlog"})}, TIMEOUT_MS);
-    await loadLog();
-  } catch {}
-}
-
-function getPass(){ return document.getElementById("pass").value.trim(); }
-
-function setMsg(id, text, type){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.textContent = text;
-  el.className = "feedback" + (type ? " " + type : "");
-}
-
-function setTag(id, text, type){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.textContent = text;
-  el.className = "badge badge-" + type;
-}
-
-function setConnected(state){
-  const dot = document.getElementById("statusDot");
-  const lbl = document.getElementById("statusLabel");
-  if(state === "ok"){ dot.className="status-dot ok"; lbl.textContent="Connected"; }
-  else if(state === "connecting"){ dot.className="status-dot connecting"; lbl.textContent="Connecting…"; }
-  else { dot.className="status-dot err"; lbl.textContent="Not connected"; }
-}
-
-function updateStats(remaining){
-  document.getElementById("statRemaining").textContent = remaining.toLocaleString();
-  document.getElementById("statUsed").textContent = (1000 - remaining).toLocaleString();
-}
-
-async function fetchWithTimeout(url, options, ms){
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), ms);
-  try {
-    const res = await fetch(url, {...options, signal:controller.signal});
-    clearTimeout(timer);
-    return res;
-  } catch(e){
-    clearTimeout(timer);
-    if(e.name==="AbortError") throw new Error("Request timed out after "+(ms/1000)+"s — API may be down.");
-    throw e;
-  }
-}
-
-async function adminPost(action){
-  const pass = getPass();
-  if(!pass) return {ok:false,error:"Enter your password first."};
-  const res = await fetchWithTimeout(API, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({admin:true,pass,action,actor:_adminName})
-  }, TIMEOUT_MS);
-  if(!res.ok) throw new Error("Server returned "+res.status+" "+res.statusText);
-  return res.json();
-}
-
-async function checkStatus(){
+/* ── Check Status ── */
+async function checkStatus() {
   const btn = document.getElementById("checkBtn");
   btn.disabled = true;
   setConnected("connecting");
-  setMsg("loginMsg","Connecting…","warn");
-  setTag("loginTag","Checking","warn");
-  try{
+  setMsg("loginMsg", "Connecting…", "warn");
+  setTag("loginTag", "Checking…", "warn");
+  try {
     const data = await adminPost("dump");
-    if(!data.ok){
-      setMsg("loginMsg","Wrong password — access denied.","err");
-      setTag("loginTag","Failed","err");
+    if (!data.ok) {
+      setMsg("loginMsg", "Wrong password — access denied.", "err");
+      setTag("loginTag", "Failed", "err");
       setConnected("err");
       return;
     }
     updateStats(data.remaining);
-    setMsg("loginMsg","Connected. Pool has "+data.remaining+" keys remaining.","ok");
-    setTag("loginTag","Connected","ok");
+    setMsg("loginMsg", "Connected. Pool has " + data.remaining + " keys remaining.", "ok");
+    setTag("loginTag", "Connected", "ok");
     setConnected("ok");
-    await remoteLog("check_status", data.remaining+" keys remaining");
+    await remoteLog("check_status", data.remaining + " keys remaining");
     await loadLog();
     startLogPoll();
-  } catch(e){
-    const msg = e.message||"Unknown error";
-    setMsg("loginMsg","Error: "+msg,"err");
-    setTag("loginTag","Error","err");
+  } catch(e) {
+    setMsg("loginMsg", "Error: " + (e.message || "Unknown error"), "err");
+    setTag("loginTag", "Error", "err");
     setConnected("err");
   } finally {
     btn.disabled = false;
   }
 }
 
-async function dumpKeys(){
+/* ── Dump Keys ── */
+async function dumpKeys() {
   const btn = document.getElementById("dumpBtn");
   btn.disabled = true;
-  setMsg("dumpMsg","Loading…","warn");
+  setMsg("dumpMsg", "Loading…", "warn");
   document.getElementById("keysList").style.display = "none";
-  try{
+  try {
     const data = await adminPost("dump");
-    if(!data.ok){ setMsg("dumpMsg",data.error||"Failed — check your password.","err"); return; }
+    if (!data.ok) { setMsg("dumpMsg", data.error || "Failed — check password.", "err"); return; }
     _keys = data.keys || [];
     updateStats(data.remaining);
-    setMsg("dumpMsg",_keys.length+" keys loaded. Click a key to copy it individually.","ok");
+    setMsg("dumpMsg", _keys.length + " keys loaded. Click a key to copy it.", "ok");
     renderKeysList(_keys);
-    await remoteLog("load_keys", _keys.length+" keys available");
-  } catch(e){
-    setMsg("dumpMsg","Error: "+(e.message||"Unknown error"),"err");
+    await remoteLog("load_keys", _keys.length + " keys available");
+  } catch(e) {
+    setMsg("dumpMsg", "Error: " + (e.message || "Unknown error"), "err");
   } finally {
     btn.disabled = false;
   }
@@ -414,43 +681,44 @@ function renderKeysList(keys) {
   const list = document.getElementById("keysList");
   if (!keys.length) { list.style.display = "none"; return; }
   list.style.display = "block";
-  list.style.whiteSpace = "normal";
   list.innerHTML = keys.map(k =>
-    `<div class="key-row" onclick="copySpecificKey('${escLog(k)}')" title="Click to copy this key">${escLog(k)}</div>`
+    `<div class="key-row" onclick="copySpecificKey('${escHtml(k)}')" title="Click to copy">${escHtml(k)}</div>`
   ).join("");
 }
 
 async function copySpecificKey(key) {
   try {
     await navigator.clipboard.writeText(key);
-    setMsg("dumpMsg","Copied: "+key,"ok");
+    setMsg("dumpMsg", "Copied: " + key, "ok");
     await remoteLog("copy_key", key);
   } catch {
-    setMsg("dumpMsg","Copy failed — try manually.","err");
+    setMsg("dumpMsg", "Copy failed — try manually.", "err");
   }
 }
 
-async function copyKeys(){
-  if(!_keys.length){ setMsg("dumpMsg","Load keys first.","err"); return; }
+async function copyKeys() {
+  if (!_keys.length) { setMsg("dumpMsg", "Load keys first.", "err"); return; }
   navigator.clipboard.writeText(_keys.join("\n")).then(async () => {
-    setMsg("dumpMsg","Copied all "+_keys.length+" keys to clipboard.","ok");
-    await remoteLog("copy_all_keys", _keys.length+" keys");
+    setMsg("dumpMsg", "Copied all " + _keys.length + " keys to clipboard.", "ok");
+    await remoteLog("copy_all_keys", _keys.length + " keys");
   }).catch(() => {
-    setMsg("dumpMsg","Copy failed — try selecting text manually.","err");
+    setMsg("dumpMsg", "Copy failed — try selecting text manually.", "err");
   });
 }
 
+/* ── Reseed ── */
 let _reseedConfirmed = false;
 let _reseedTimer = null;
-function confirmReseed(){
-  if(!_reseedConfirmed){
+
+function confirmReseed() {
+  if (!_reseedConfirmed) {
     _reseedConfirmed = true;
     document.getElementById("reseedBtn").textContent = "Click again to confirm";
-    setMsg("reseedMsg","Are you sure? This permanently wipes all existing keys.","warn");
+    setMsg("reseedMsg", "Are you sure? This permanently wipes all existing keys.", "warn");
     _reseedTimer = setTimeout(() => {
       _reseedConfirmed = false;
       document.getElementById("reseedBtn").textContent = "Reseed pool";
-      setMsg("reseedMsg","Cancelled.","");
+      setMsg("reseedMsg", "Cancelled.", "");
     }, 5000);
     return;
   }
@@ -460,45 +728,64 @@ function confirmReseed(){
   doReseed();
 }
 
-async function doReseed(){
+async function doReseed() {
   const btn = document.getElementById("reseedBtn");
   btn.disabled = true;
-  setMsg("reseedMsg","Reseeding…","warn");
-  setTag("reseedTag","Working","warn");
-  try{
+  setMsg("reseedMsg", "Reseeding…", "warn");
+  setTag("reseedTag", "Working…", "warn");
+  try {
     const data = await adminPost("reseed");
-    if(!data.ok){ setMsg("reseedMsg",data.error||"Failed.","err"); setTag("reseedTag","Failed","err"); return; }
+    if (!data.ok) { setMsg("reseedMsg", data.error || "Failed.", "err"); setTag("reseedTag", "Failed", "err"); return; }
     updateStats(data.remaining);
-    setMsg("reseedMsg","Done. Pool reseeded with "+data.remaining+" fresh keys.","ok");
-    setTag("reseedTag","Done","ok");
+    setMsg("reseedMsg", "Done. Pool reseeded with " + data.remaining + " fresh keys.", "ok");
+    setTag("reseedTag", "Done", "ok");
     _keys = [];
     document.getElementById("keysList").style.display = "none";
-    setMsg("dumpMsg","Pool reseeded — click Load keys to see new ones.","");
+    setMsg("dumpMsg", "Pool reseeded — click Load keys to see new ones.", "");
     await loadLog();
-  } catch(e){
-    setMsg("reseedMsg","Error: "+(e.message||"Unknown error"),"err");
-    setTag("reseedTag","Error","err");
+  } catch(e) {
+    setMsg("reseedMsg", "Error: " + (e.message || "Unknown error"), "err");
+    setTag("reseedTag", "Error", "err");
   } finally {
     btn.disabled = false;
   }
 }
 
+/* ── Clear Log ── */
+let _clearLogConfirmed = false;
+let _clearLogTimer = null;
+
+async function confirmClearLog() {
+  if (!_clearLogConfirmed) {
+    _clearLogConfirmed = true;
+    setMsg("reseedMsg", "Click Clear Log again to confirm — permanently deletes all entries.", "warn");
+    _clearLogTimer = setTimeout(() => { _clearLogConfirmed = false; setMsg("reseedMsg", "Ready.", ""); }, 5000);
+    return;
+  }
+  clearTimeout(_clearLogTimer);
+  _clearLogConfirmed = false;
+  const pass = getPass();
+  if (!pass) { showToast("Enter password first."); return; }
+  try {
+    await fetchWithTimeout(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ admin: true, pass, action: "clearlog" }),
+    }, TIMEOUT_MS);
+    await loadLog();
+    showToast("Log cleared.");
+  } catch(e) {
+    showToast("Error: " + (e.message || "Unknown"));
+  }
+}
+
+/* ── Enter key on password field ── */
+document.getElementById("pass").addEventListener("keydown", e => { if (e.key === "Enter") checkStatus(); });
+
+/* ── Init ── */
+buildThemeDropdown();
+applyTheme(_currentTheme);
 initAdminNameGate();
 </script>
-
-<script>
-  setInterval(() => {
-  const threshold = 160;
-  const devtoolsOpen =
-    window.outerWidth - window.innerWidth > threshold ||
-    window.outerHeight - window.innerHeight > threshold;
-
-  const block = document.getElementById("devtoolsBlock");
-
-  if(devtoolsOpen){
-    block.style.display = "flex";
-  } else {
-    block.style.display = "none";
-  }
-}, 1000);
-</script>
+</body>
+</html>
